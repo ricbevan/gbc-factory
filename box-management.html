@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Powder Management</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/uikit.min.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<script src="js/uikit.min.js"></script>
+		<script src="js/uikit-icons.min.js"></script>
+	</head>
+	<body uk-height-viewport>
+		<div class="uk-section gbc-green">
+			<div class="uk-container">
+				<div class="uk-position-top-right uk-padding-small" uk-tooltip="title: Not logged in; pos: bottom" id="username"><span uk-icon="user" class="uk-icon-button"></span></div>
+				<h1 class="uk-text-large">Powder Management</h1>
+			</div>
+		</div>
+		<div class="uk-section uk-section-default">
+			<div class="uk-container">
+				<ul class="uk-breadcrumb">
+					<li><a href="index.html">Home</a></li>
+					<li><span>Powder Management</span></li>
+				</ul>
+				<div class="uk-child-width-1-1 uk-grid-small" id="page" uk-grid>
+					<div class="uk-child-width-1-1 uk-grid-small uk-margin-medium-top" id="box-data" uk-grid >
+						<div>
+						  <input id="box-number" class="uk-input" type="text" placeholder="box number">
+						</div>
+						<div>
+						  <select id="box-code" class="uk-select" disabled>
+							<option>getting codes...</option>
+						  </select>
+						</div>
+						<div>
+						  <select id="box-finish" class="uk-select" disabled>
+							<option>getting finishes...</option>
+						  </select>
+						</div>
+						<div>
+						  <select id="box-supplier" class="uk-select" disabled>
+							<option>getting suppliers...</option>
+						  </select>
+						</div>
+						<div>
+						  <input id="box-batch-number" class="uk-input" type="text" placeholder="batch number">
+						</div>
+						<div>
+						  <button class="uk-button uk-button-primary" id="save-box">save</button>
+						</div>
+					</div>
+				</div>
+				<div class="uk-alert-danger" id="error" uk-alert hidden>
+					<p></p>
+				</div>
+			</div>
+			
+			<div class="uk-modal uk-flex uk-open uk-flex-center uk-overlay-primary uk-text-center uk-flex-middle" id="loading" hidden>
+				<div class="uk-child-width-1-1" uk-grid>
+					<div id="loading-spinner">
+						<span uk-spinner="ratio: 4.5"></span>
+					</div>
+					<div>
+						<p id="loading-message">Loading...</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/gbc.js"></script>
+		<script src="js/gbc-office.js"></script>
+		<script src="js/monday.js"></script>
+		<script src="js/pages/box-management.js"></script>
+	</body>
+</html>

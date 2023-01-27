@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Job Completion</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/uikit.min.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<script src="js/uikit.min.js"></script>
+		<script src="js/uikit-icons.min.js"></script>
+	</head>
+	<body uk-height-viewport>
+		<div class="uk-section gbc-red">
+			<div class="uk-container">
+				<div class="uk-position-top-right uk-padding-small" uk-tooltip="title: Not logged in; pos: bottom" id="username"><span uk-icon="user" class="uk-icon-button"></span></div>
+				<h1 class="uk-text-large">Job Completion</h1>
+			</div>
+		</div>
+		<div class="uk-section uk-section-default">
+			<div class="uk-container">
+				<ul class="uk-breadcrumb">
+					<li><a href="index.html">Home</a></li>
+					<li><span>Job Completion</span></li>
+				</ul>
+				<div  class="uk-child-width-1-1 uk-grid-small" id="page" uk-grid>
+					<div>
+						<div class="uk-search uk-search-large">
+							<button class="uk-search-icon-flip" id="job-search" uk-search-icon></button>
+							<input class="uk-search-input" type="number" placeholder="Job Number" id="job-number">
+						</div>
+					</div>
+					<div class="uk-child-width-1-3@m uk-grid-small" id="job-roles" uk-grid hidden>
+						<div class="uk-width-1-1">
+							<div class="uk-alert-success" uk-alert>
+								<a class="uk-alert-close" uk-close></a>
+								<p>Click on any of the below to assign yourself to that role.</p>
+							</div>
+						</div>
+						<div>
+							<div class="uk-card uk-card-body uk-card-hover" id="goods-in">
+								<h3 class="uk-card-title">Goods-In Checker</h3>
+								<p>-</p>
+								<span class="uk-position-bottom-right uk-padding-small"></span>
+							</div>
+						</div>
+						<div>
+							<div class="uk-card uk-card-body uk-card-hover" id="colour">
+								<h3 class="uk-card-title">Colour Checker</h3>
+								<p>-</p>
+								<span class="uk-position-bottom-right uk-padding-small"></span>
+							</div>
+						</div>
+						<div>
+							<div class="uk-card uk-card-body uk-card-hover" id="coater">
+								<h3 class="uk-card-title">Coater</h3>
+								<p>-</p>
+								<span class="uk-position-bottom-right uk-padding-small"></span>
+							</div>
+						</div>
+						<div>
+							<div class="uk-card uk-card-body uk-card-hover" id="goods-out">
+								<h3 class="uk-card-title">Goods-Out Checker</h3>
+								<p>-</p>
+								<span class="uk-position-bottom-right uk-padding-small"></span>
+							</div>
+						</div>
+						<div>
+							<div class="uk-card uk-card-body uk-card-hover" id="aluminium">
+								<h3 class="uk-card-title">Aluminium Pre-Treater</h3>
+								<p>-</p>
+								<span class="uk-position-bottom-right uk-padding-small"></span>
+							</div>
+						</div>
+						<div>
+							<div class="uk-card uk-card-body uk-card-hover" id="blaster">
+								<h3 class="uk-card-title">Blaster</h3>
+								<p>-</p>
+								<span class="uk-position-bottom-right uk-padding-small"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="uk-alert-danger" id="error" uk-alert hidden>
+					<p></p>
+				</div>
+			</div>
+			
+			<div class="uk-modal uk-flex uk-open uk-flex-center uk-overlay-primary uk-text-center uk-flex-middle" id="loading" hidden>
+				<div class="uk-child-width-1-1" uk-grid>
+					<div id="loading-spinner">
+						<span uk-spinner="ratio: 4.5"></span>
+					</div>
+					<div>
+						<p id="loading-message">Loading...</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/gbc.js"></script>
+		<script src="js/gbc-office.js"></script>
+		<script src="js/monday.js"></script>
+		<script src="js/pages/job-completion.js"></script>
+	</body>
+</html>

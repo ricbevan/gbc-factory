@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Powder Management</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/uikit.min.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<script src="js/uikit.min.js"></script>
+		<script src="js/uikit-icons.min.js"></script>
+	</head>
+	<body uk-height-viewport>
+		<div class="uk-section gbc-green">
+			<div class="uk-container">
+				<div class="uk-position-top-right uk-padding-small" uk-tooltip="title: Not logged in; pos: bottom" id="username"><span uk-icon="user" class="uk-icon-button"></span></div>
+				<h1 class="uk-text-large">Powder Management</h1>
+			</div>
+		</div>
+		<div class="uk-section uk-section-default">
+			<div class="uk-container">
+				<ul class="uk-breadcrumb">
+					<li><a href="index.html">Home</a></li>
+					<li><span>Powder Management</span></li>
+				</ul>
+				<div class="uk-child-width-1-1 uk-grid-small" id="page" uk-grid>
+					<div class="uk-grid-small uk-flex uk-flex-middle" uk-grid>
+						<div class="uk-width-expand">
+							<div class="uk-search uk-search-large">
+								<button class="uk-search-icon-flip" id="box-search" uk-search-icon></button>
+								<input class="uk-search-input" type="number" placeholder="Box Number" id="box-number" value="0000001">
+							</div>
+						</div>
+						<div class="uk-width-auto">
+							<a class="uk-button uk-button-primary uk-button-large" id="edit-box" hidden>Edit Box</a>
+						</div>
+					</div>
+					<div class="uk-child-width-1-1 uk-grid-small uk-margin-medium-top" id="box-data" uk-grid hidden>
+						<p id="powder-supplier"></p>
+						<p id="powder-batch"></p>
+						<div class="uk-grid-small uk-flex uk-flex-middle" uk-grid>
+							<div class="uk-width-auto"><span id="powder-location"></span></div>
+							<div class="uk-width-expand" id="move-box"></div>
+						</div>
+						<div class="uk-section uk-section-muted uk-section-xsmall uk-margin-small-top">
+							<input class="uk-input uk-form-width-medium" type="text" placeholder="Job Number" id="job-number">
+							<button class="uk-button uk-button-primary" id="coat-job">Coat Job</button>
+							<p id="box-jobs"></p>
+						</div>
+						<div class="uk-child-width-1-5@m uk-grid-small uk-margin-small-top" id="box-weights" uk-grid>
+							<div><button class="uk-button uk-width-1-1" id="box-25">25 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-24">24 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-23">23 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-22">22 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-21">21 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-20">20 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-19">19 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-18">18 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-17">17 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-16">16 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-15">15 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-14">14 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-13">13 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-12">12 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-11">11 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-10">10 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-9">9 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-8">8 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-7">7 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-6">6 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-5">5 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-4">4 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-3">3 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-2">2 kg</button></div>
+							<div><button class="uk-button uk-width-1-1" id="box-1">1 kg</button></div>
+							<div class="uk-width-1-1"><button class="uk-button uk-button-danger uk-width-1-1" id="box-0">Remove</button></div>
+						</div>
+						<div class="uk-grid-small uk-margin-medium-top" id="box-updates" uk-grid>
+						</div>
+					</div>
+				</div>
+				<div class="uk-alert-danger" id="error" uk-alert hidden>
+					<p></p>
+				</div>
+			</div>
+			
+			<div class="uk-modal uk-flex uk-open uk-flex-center uk-overlay-primary uk-text-center uk-flex-middle" id="loading" hidden>
+				<div class="uk-child-width-1-1" uk-grid>
+					<div id="loading-spinner">
+						<span uk-spinner="ratio: 4.5"></span>
+					</div>
+					<div>
+						<p id="loading-message">Loading...</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/gbc.js"></script>
+		<script src="js/gbc-office.js"></script>
+		<script src="js/monday.js"></script>
+		<script src="js/pages/powder-management.js?v=2"></script>
+	</body>
+</html>

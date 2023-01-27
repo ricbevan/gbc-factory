@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>GBC Office Home</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/uikit.min.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<script src="js/uikit.min.js"></script>
+		<script src="js/uikit-icons.min.js"></script>
+	</head>
+	<body uk-height-viewport>
+		<div class="uk-section uk-section-secondary uk-light">
+			<div class="uk-container">
+				<div class="uk-position-top-right uk-padding-small" uk-tooltip="title: Not logged in; pos: bottom" id="username"><span uk-icon="user" class="uk-icon-button"></span></div>
+				<h1 class="uk-text-large">Home</h1>
+			</div>
+		</div>
+		<div class="uk-section uk-section-default">
+			<div class="uk-container">
+				<ul class="uk-breadcrumb">
+					<li><span>Home</span></li>
+				</ul>
+				<div class="uk-child-width-1-3@m uk-grid-small uk-grid-match uk-link-reset" id="page" uk-grid>
+					<div>
+						<a href="job-completion.html" class="uk-card uk-card-default uk-card-body uk-light uk-card-hover gbc-red">
+							<h3 class="uk-card-title">Job Completion</h3>
+							<p>Mark a job as blasted, coated, checked, etc.</p>
+						</a>
+					</div>
+					<div>
+						<a href="radiators.html"  class="uk-card uk-card-default uk-card-body uk-card-hover gbc-orange">
+							<h3 class="uk-card-title">Radiators</h3>
+							<p>Process radiators through the system.</p>
+						</a>
+					</div>
+					<div>
+						<a href="vehicle-checks.html"  class="uk-card uk-card-default uk-card-body uk-card-hover gbc-yellow">
+							<h3 class="uk-card-title">Vehicle Checks</h3>
+							<p>Complete checks on work vehicles.</p>
+						</a>
+					</div>
+					<!-- <div>
+						<a href="powder-management.html" class="uk-card uk-card-default uk-card-body uk-card-hover gbc-green">
+							<h3 class="uk-card-title">Powder Management</h3>
+							<p>Manage boxes of powder.</p>
+						</a>
+					</div> -->
+					<!-- <div>
+						<a href="annual-leave.html"  class="uk-card uk-card-default uk-card-body uk-card-hover gbc-blue">
+							<h3 class="uk-card-title">Annual Leave</h3>
+							<p>View your planned & taken holidays and days off.</p>
+						</a>
+					</div> -->
+				</div>
+				<div class="uk-alert-danger" id="error" uk-alert hidden>
+					<p></p>
+				</div>
+			</div>
+			
+			<div class="uk-modal uk-flex uk-open uk-flex-center uk-overlay-primary uk-text-center uk-flex-middle" id="loading" hidden>
+				<div class="uk-child-width-1-1" uk-grid>
+					<div id="loading-spinner">
+						<span uk-spinner="ratio: 4.5"></span>
+					</div>
+					<div>
+						<p id="loading-message">Loading...</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/gbc.js"></script>
+		<script src="js/gbc-office.js"></script>
+		<script src="js/monday.js"></script>
+		<script src="js/pages/index.js"></script>
+	</body>
+</html>
