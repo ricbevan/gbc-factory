@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getPallets() {
 	
-	let query = ' { items_by_column_values (board_id: 3894008168, column_id: "color", column_value: "At GBC") { id name column_values(ids:"color") { id text } } } ';
+	let query = ' { items_by_column_values (board_id: 3894008168, column_id: "color", column_value: "At GBC") { id name } } ';
 	
 	mondayAPI(query, function(data) {
 		
