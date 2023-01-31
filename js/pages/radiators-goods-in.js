@@ -1,5 +1,3 @@
-var purchaseOrderSummary = []; // holds all radiator ids in a purchase order
-
 getStarted();
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -8,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getPurchaseOrders() {
 	
-	let query = ' { boards(ids:3852829643) { id name groups { id title items { id } } } } ';
+	let query = ' { boards(ids:3852829643) { id name groups { id title } } } ';
 	
 	mondayAPI(query, function(data) {
 		
@@ -25,15 +23,6 @@ function getPurchaseOrders() {
 			let purchaseOrder = purchaseOrders[i];
 			
 			html += "<option value=\"" + purchaseOrder.id + "\">" + purchaseOrder.title + "</option>";
-			
-			// store all radiator IDs in a purchase order for use later
-			var radiatorDateIds = [];
-			
-			for (var j = 0; j < purchaseOrder.items.length; j++) {
-				radiatorDateIds.push(purchaseOrder.items[j].id);
-			}
-			
-			purchaseOrderSummary.push({id : purchaseOrder.id, name: purchaseOrder.title, radiatorIds: radiatorDateIds});
 		}
 		
 		gbc('#goods-in-date').html(html).on('change', function(e) {
@@ -46,14 +35,35 @@ function getPurchaseOrders() {
 
 function getPurchaseOrder() {
 	
-	let purchaseOrderDate = gbc('#goods-in-date').val();
+	let purchaseOrderId = gbc('#goods-in-date').val();
 	
-	// get all radiator IDs from the selected purchase order and retrieve
-	let radiatorIds = findInArray(purchaseOrderSummary, 'id', purchaseOrderDate).radiatorIds.join(',');
-	
-	let query = ' { boards(ids:3852829643) { items(ids: [' + radiatorIds + ']) { id name column_values { title text id } } } } ';
+	let query = ' { boards(ids:3852829643) { groups(ids: "' + purchaseOrderId + '") { id items { id } } } } ';
 	
 	mondayAPI(query, function(data) {
+		
+		var purchaseOrderRadiatorIds = [];
+		
+		let radiatorIds = data['data']['boards'][0]['groups'][0]['items'];
+		
+		for (var i = 0; i < radiatorIds.length; i++) {
+			let radiatorId = radiatorIds[i];
+			
+			purchaseOrderRadiatorIds.push(radiatorId.id);
+		}
+		
+		purchaseOrderRadiatorIds = purchaseOrderRadiatorIds.join(',');
+		
+		getRadiators(purchaseOrderRadiatorIds);
+	});
+	
+}
+
+function getRadiators(purchaseOrderRadiatorIds) {
+	let query = ' { boards(ids:3852829643) { items(ids: [' + purchaseOrderRadiatorIds + ']) { id name column_values { title text id } } } } ';
+	
+	mondayAPI(query, function(data) {
+		
+		console.log(data);
 		
 		var palletSummary = [];
 		
@@ -63,7 +73,7 @@ function getPurchaseOrder() {
 		for (var i = 0; i < purchaseOrders.length; i++) {
 			let purchaseOrder = purchaseOrders[i];
 			
-			let palletNumber = findInArray(purchaseOrder.column_values, 'title', 'Pallet').text;
+			let palletNumber = findInArray(purchaseOrder.column_values, 'id', 'numeric3').text;
 			
 			let palletSummaryPallet = findInArray(palletSummary, 'palletNumber', palletNumber);
 			let palletAlreadyInPalletSummary = (palletSummaryPallet == undefined);
@@ -96,14 +106,14 @@ function getPurchaseOrder() {
 			
 			// sort radiators on pallet by colour, then number
 			palletRadiators.sort((a, b) => (
-				(findInArray(a.column_values, 'title', 'Colour').text + a.name) > 
-				(findInArray(b.column_values, 'title', 'Colour').text + b.name)) ? 1 : -1);
+				(findInArray(a.column_values, 'id', 'color').text + a.name) > 
+				(findInArray(b.column_values, 'id', 'color').text + b.name)) ? 1 : -1);
 			
 			for (var j = 0; j < palletRadiators.length; j++) {
 				let palletRadiator = palletRadiators[j];
 				
-				let radiatorColour = findInArray(palletRadiator.column_values, 'title', 'Colour').text;
-				let radiatorReceived = ((findInArray(palletRadiator.column_values, 'title', 'Received').text == 'v') ? ' checked' : '');
+				let radiatorColour = findInArray(palletRadiator.column_values, 'id', 'color').text;
+				let radiatorReceived = ((findInArray(palletRadiator.column_values, 'id', 'color0').text == 'Received') ? ' checked' : '');
 				
 				html += '<li>';
 				html += '<label>';
@@ -148,7 +158,7 @@ function saveRadiators() {
 	for (var i = 0; i < checkboxes.length; i++) {
 		let radiator = checkboxes[i];
 		let radiatorId = radiator.id;
-		let radiatorChecked = JSON.stringify('{"boolean" : ' + (radiator.checked ? '{"checked" : "true"}' : 'null') + '}');
+		let radiatorChecked = JSON.stringify('{"color0" : {"label":"' + (radiator.checked ? 'Received' : '') + '"} }');
 		
 		query += ' update' + radiatorId + ': change_multiple_column_values(item_id: ' + radiatorId + ', board_id: 3852829643, column_values: ' + radiatorChecked + ') { id }'
 	}
