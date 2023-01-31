@@ -59,11 +59,10 @@ function getPurchaseOrder() {
 }
 
 function getRadiators(purchaseOrderRadiatorIds) {
+	
 	let query = ' { boards(ids:3852829643) { items(ids: [' + purchaseOrderRadiatorIds + ']) { id name column_values { title text id } } } } ';
 	
 	mondayAPI(query, function(data) {
-		
-		console.log(data);
 		
 		var palletSummary = [];
 		
@@ -117,7 +116,7 @@ function getRadiators(purchaseOrderRadiatorIds) {
 				
 				html += '<li>';
 				html += '<label>';
-				html += '<input class="uk-checkbox" type="checkbox" id="' + palletRadiator.id + '"' + radiatorReceived + '> ';
+				html += '<input class="uk-checkbox" type="checkbox" id="' + palletRadiator.id + '" data-changed="false"' + radiatorReceived + '> ';
 				html += '[' + radiatorColour + '] ' + palletRadiator.name;
 				html += '</label>'
 				html += '</li>';
@@ -138,6 +137,10 @@ function getRadiators(purchaseOrderRadiatorIds) {
 		gbc('#page h3 input').on('change', function(e) {
 			selectAllOnPallet(this);
 		});
+		
+		gbc('#page ul input[type="checkbox"]').on('click', function(e) {
+			e.target.dataset.changed = "true";
+		});
 	});
 }
 
@@ -151,7 +154,7 @@ function selectAllOnPallet(pallet) {
 }
 
 function saveRadiators() {
-	let checkboxes = document.querySelectorAll('#page ul input[type=checkbox]');
+	let checkboxes = document.querySelectorAll('#page ul input[type=checkbox][data-changed="true"]');
 	
 	var query = 'mutation {';
 	
@@ -160,7 +163,7 @@ function saveRadiators() {
 		let radiatorId = radiator.id;
 		let radiatorChecked = JSON.stringify('{"color0" : {"label":"' + (radiator.checked ? 'Received' : '') + '"} }');
 		
-		query += ' update' + radiatorId + ': change_multiple_column_values(item_id: ' + radiatorId + ', board_id: 3852829643, column_values: ' + radiatorChecked + ') { id }'
+		query += ' update' + radiatorId + ': change_multiple_column_values(item_id: ' + radiatorId + ', board_id: 3852829643, column_values: ' + radiatorChecked + ') { id }';
 	}
 	
 	query += ' }';
