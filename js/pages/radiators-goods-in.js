@@ -149,7 +149,10 @@ function selectAllOnPallet(pallet) {
 	let selectAllCheckbox = document.querySelectorAll('#' + pallet.id)[0].checked;
 	
 	for (var i = 0; i < palletCheckboxes.length; i++) {
-		palletCheckboxes[i].checked = selectAllCheckbox;
+		let palletCheckbox = palletCheckboxes[i];
+		
+		palletCheckbox.checked = selectAllCheckbox;
+		palletCheckbox.dataset.changed = "true";
 	}
 }
 
@@ -167,6 +170,8 @@ function saveRadiators() {
 	}
 	
 	query += ' }';
+	
+	console.log(query);
 	
 	mondayAPI(query, function(data) {
 		UIkit.notification('Radiators saved', 'success');
