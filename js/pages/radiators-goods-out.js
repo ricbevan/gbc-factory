@@ -37,8 +37,6 @@ function getRadiators() {
 	
 	mondayAPI(query, function(data) {
 		
-		console.log(data);
-		
 		var palletSummary = [];
 		
 		let radiators = data['data']['items_by_column_values'];
@@ -47,7 +45,7 @@ function getRadiators() {
 		for (var i = 0; i < radiators.length; i++) {
 			let radiator = radiators[i];
 			
-			let palletNumber = radiator.group.title; //findInArray(radiator.column_values, 'id', 'numeric3').text;
+			let palletNumber = radiator.group.title.replace(' AM', '').replace(' PM', '');
 			
 			let palletSummaryPallet = findInArray(palletSummary, 'palletNumber', palletNumber);
 			let palletAlreadyInPalletSummary = (palletSummaryPallet == undefined);
@@ -110,7 +108,7 @@ function getRadiators() {
 				
 				html += '<li>';
 				html += '<label>';
-				html += '<input class="uk-checkbox" type="checkbox" id="' + palletRadiator.id + '" data-changed="false"' + checkboxStatus + '> ';
+				html += '<input class="uk-checkbox" type="checkbox" id="' + palletRadiator.id + '" data-name="' + pallet.palletNumber + ' [' + radiatorColour + '] ' + palletRadiator.name + '" data-changed="false"' + checkboxStatus + '> ';
 				html += '[' + radiatorColour + '] ' + palletRadiator.name + checkboxAlreadyOnPallet;
 				html += '</label>'
 				html += '</li>';
@@ -122,6 +120,8 @@ function getRadiators() {
 		}
 		
 		html += '</ul>';
+		
+		html += '<div><div class="uk-card uk-card-secondary uk-card-body" id="selected-radiators"><h3 class="uk-card-title">Selected radiators</h3><ul class="uk-list"></ul></div></div>';
 		html += '<div><button class="uk-button uk-button-primary uk-width-1-1" id="goods-out-save">Save</button></div>';
 		
 		gbc('#page').html(html).show();
@@ -132,9 +132,26 @@ function getRadiators() {
 		
 		gbc('#page ul input[type="checkbox"]').on('click', function(e) {
 			e.target.dataset.changed = "true";
+			getSelectedRadiators();
 		});
 		
+		getSelectedRadiators();
 	});
+}
+
+function getSelectedRadiators() {
+	
+	let radiators = document.querySelectorAll('#page ul input[type=checkbox]:checked');
+	
+	var html = '';
+	
+	for (var i = 0; i < radiators.length; i++) {
+		radiator = radiators[i];
+		
+		html += '<li>' + radiator.dataset.name + '</li>';
+	}
+	
+	gbc('#selected-radiators ul').html(html);
 }
 
 function saveRadiators() {
