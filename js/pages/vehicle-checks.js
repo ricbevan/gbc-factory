@@ -103,7 +103,7 @@ function getVehicleChecks() {
 		}
 		
 		gbc('#vehicle-check-vehicle').on('change', function(e) {
-			getVehicleChecks2();
+			selectVehicle();
 		});
 		
 		gbc('#select-all-vehicle-checks').on('change', function(e) {
@@ -130,7 +130,7 @@ function selectAll() {
 	}
 }
 
-function getVehicleChecks2() {
+function selectVehicle() {
 	localStorage.setItem("last-selected-vehicle", document.querySelectorAll('#vehicle-check-vehicle')[0].value);
 	getVehicleChecks();
 }
