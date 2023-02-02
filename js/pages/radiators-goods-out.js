@@ -143,7 +143,11 @@ function getSelectedRadiators() {
 	
 	let radiators = document.querySelectorAll('#page ul input[type=checkbox]:checked');
 	
-	var html = '';
+	var html = 'No radiators currently on pallet';
+	
+	if (radiators.length > 0) {
+		html = '';
+	}
 	
 	for (var i = 0; i < radiators.length; i++) {
 		radiator = radiators[i];
