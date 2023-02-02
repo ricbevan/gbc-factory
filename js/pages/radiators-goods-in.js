@@ -171,8 +171,6 @@ function saveRadiators() {
 	
 	query += ' }';
 	
-	console.log(query);
-	
 	mondayAPI(query, function(data) {
 		UIkit.notification('Radiators saved', 'success');
 	});
