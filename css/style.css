@@ -19,6 +19,10 @@ input[type="number"]::-webkit-outer-spin-button {
   color: #000 !important;
 }
 
+.gbc-box-link {
+  cursor: pointer;
+}
+
 .gbc-red, .gbc-red:hover { background-color: #EB1E63 !important; }
 .gbc-orange, .gbc-orange:hover { background-color: #FF5723 !important; }
 .gbc-yellow, .gbc-yellow:hover { background-color: #FFC10F !important; }

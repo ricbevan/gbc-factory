@@ -82,7 +82,7 @@ function loadJob(jobNumber) {
 					}
 					
 					gbc('#' + jobCompletionColumn.office + ' p').text(people);
-					gbc('#' + jobCompletionColumn.office).removeClass('uk-card-primary').removeClass('uk-card-default').addClass('uk-card-' + colour);
+					gbc('#' + jobCompletionColumn.office).removeClass('uk-card-primary').removeClass('uk-card-default').addClass('uk-card-' + colour).addClass('gbc-box-link');
 					gbc('#' + jobCompletionColumn.office + ' span').attr('uk-icon', icon);
 					
 					gbc('#' + jobCompletionColumn.office).attr('data-assigned', JSON.stringify(assigned)).attr('data-job-id', job.id).attr('data-column-id', jobColumn.id);
