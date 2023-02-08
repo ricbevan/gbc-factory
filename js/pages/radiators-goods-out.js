@@ -65,16 +65,33 @@ function getRadiators() {
 		for (var i = 0; i < palletSummary.length; i++) {
 			let pallet = palletSummary[i];
 			
+			let palletRadiators = pallet.radiators;
+			
+			var incompleteRadiators = 0;
+			var incompleteRadiatorsText = '';
+			
+			for (var j = 0; j < palletRadiators.length; j++) {
+				let palletRadiator = palletRadiators[j];
+				
+				let linkedPalletText = findInArray(palletRadiator.column_values, 'id', 'board_relation6').text;
+				
+				if (linkedPalletText == "") {
+					incompleteRadiators += 1;
+				}
+			}
+			
+			if (incompleteRadiators > 0) {
+				incompleteRadiatorsText = ' [' + incompleteRadiators + ' remaining]';
+			}
+			
 			html += '<li>';
 			html += '<a class="uk-accordion-title" href="#">';
 			html += '<h3>';
-			html += pallet.palletNumber;
+			html += pallet.palletNumber + incompleteRadiatorsText;
 			html += '</h3>';
 			html += '</a>';
 			html += '<div class="uk-accordion-content">';
 			html += '<ul class="uk-list uk-list-striped">';
-			
-			let palletRadiators = pallet.radiators;
 			
 			// sort radiators on pallet by colour, then number
 			palletRadiators.sort((a, b) => (
