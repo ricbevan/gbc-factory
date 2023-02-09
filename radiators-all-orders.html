@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Radiators</title>
+		<title>Radiators All Orders</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="css/uikit.min.css" />
@@ -13,40 +13,23 @@
 		<div class="uk-section gbc-orange">
 			<div class="uk-container">
 				<div class="uk-position-top-right uk-padding-small" uk-tooltip="title: Not logged in; pos: bottom" id="username"><span uk-icon="user" class="uk-icon-button"></span></div>
-				<h1 class="uk-text-large">Radiators</h1>
+				<h1 class="uk-text-large">Radiators Goods In</h1>
 			</div>
 		</div>
 		<div class="uk-section uk-section-default">
 			<div class="uk-container">
 				<ul class="uk-breadcrumb">
 					<li><a href="index.html">Home</a></li>
-					<li><span>Radiators</span></li>
+					<li><a href="radiators.html">Radiators</a></li>
+					<li><span>All Orders</span></li>
 				</ul>
-				<div class="uk-child-width-1-3@m uk-grid-small uk-grid-match uk-link-reset" id="page" uk-grid>
+				<div class="uk-child-width-1-1 uk-link-reset" uk-grid>
 					<div>
-						<a href="radiators-goods-in.html" class="uk-card uk-card-default uk-card-body uk-light uk-card-hover gbc-orange">
-							<h3 class="uk-card-title">Goods In</h3>
-							<p>Mark a radiator as received.</p>
-						</a>
+						<select class="uk-select" id="purchase-order"></select>
 					</div>
-					<div>
-						<a href="radiators-goods-out.html" class="uk-card uk-card-default uk-card-body uk-light uk-card-hover gbc-orange">
-							<h3 class="uk-card-title">Goods Out</h3>
-							<p>Mark a radiator as sent.</p>
-						</a>
-					</div>
-					<div>
-						<a href="radiators-deliveries.html" class="uk-card uk-card-default uk-card-body uk-light uk-card-hover gbc-orange">
-							<h3 class="uk-card-title">Deliveries</h3>
-							<p>Mark pallets as delivered.</p>
-						</a>
-					</div>
-					<div>
-						<a href="radiators-all-orders.html" class="uk-card uk-card-default uk-card-body uk-light uk-card-hover gbc-orange">
-							<h3 class="uk-card-title">All Orders</h3>
-							<p>All purchase orders and radiator status.</p>
-						</a>
-					</div>
+				</div>
+				<div class="uk-child-width-1-1 uk-link-reset" id="page" uk-grid hidden>
+					
 				</div>
 				<div class="uk-alert-danger" id="error" uk-alert hidden>
 					<p></p>
@@ -67,6 +50,6 @@
 		<script src="js/gbc.js"></script>
 		<script src="js/gbc-office.js"></script>
 		<script src="js/monday.js"></script>
-		<script src="js/pages/radiators.js"></script>
+		<script src="js/pages/radiators-all-orders.js"></script>
 	</body>
 </html>
