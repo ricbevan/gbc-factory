@@ -105,7 +105,7 @@ function getRadiators(purchaseOrderRadiatorIds) {
 				html += 'Not delivered yet';
 			} else {
 				if (radiatorDispatchDate != "") {
-					html += 'Sent on pallet ' + radiatorDispatchPallet + ', on  ' + radiatorDispatchDate;
+					html += 'Sent on pallet ' + radiatorDispatchPallet + ', on  ' + fixDate(radiatorDispatchDate);
 				} else {
 					html += 'On pallet ' + radiatorDispatchPallet;
 				}
