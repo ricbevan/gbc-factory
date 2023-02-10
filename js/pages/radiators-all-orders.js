@@ -22,7 +22,7 @@ function getPurchaseOrders() {
 		for (var i = 0; i < purchaseOrders.length; i++) {
 			let purchaseOrder = purchaseOrders[i];
 			
-			html += "<option value=\"" + purchaseOrder.id + "\">" + purchaseOrder.title + "</option>";
+			html += "<option value=\"" + purchaseOrder.id + "\">" + fixDate(purchaseOrder.title) + "</option>";
 		}
 		
 		gbc('#purchase-order').html(html).on('change', function(e) {
@@ -94,7 +94,7 @@ function getRadiators(purchaseOrderRadiatorIds) {
 			if (radiatorStatus == "At Limitless") {
 				html += 'Not received yet';
 			} else {
-				html += 'Received on pallet ' + radiatorReceivedPallet + ', on ' + radiatorReceivedDate;
+				html += 'Received on pallet ' + radiatorReceivedPallet + ', on ' + fixDate(radiatorReceivedDate);
 			}
 			
 			html += '</span>';
@@ -104,10 +104,10 @@ function getRadiators(purchaseOrderRadiatorIds) {
 			if (radiatorDispatchPallet == "") {
 				html += 'Not delivered yet';
 			} else {
-				html += 'Sent on pallet ' + radiatorDispatchPallet;
-				
 				if (radiatorDispatchDate != "") {
-					html += ', delivered on  ' + radiatorDispatchDate;
+					html += 'Sent on pallet ' + radiatorDispatchPallet + ', on  ' + radiatorDispatchDate;
+				} else {
+					html += 'On pallet ' + radiatorDispatchPallet;
 				}
 			}
 			

@@ -22,7 +22,7 @@ function getPurchaseOrders() {
 		for (var i = 0; i < purchaseOrders.length; i++) {
 			let purchaseOrder = purchaseOrders[i];
 			
-			html += "<option value=\"" + purchaseOrder.id + "\">" + purchaseOrder.title + "</option>";
+			html += "<option value=\"" + purchaseOrder.id + "\">" + fixDate(purchaseOrder.title) + "</option>";
 		}
 		
 		gbc('#goods-in-date').html(html).on('change', function(e) {

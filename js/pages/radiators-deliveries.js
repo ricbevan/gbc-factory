@@ -14,7 +14,7 @@ function getDates() {
 	let loopDate = new Date(endDate);
 	
 	while (loopDate >= startDate) {
-		html += "<option value=\"" + loopDate.toISOString().slice(0, 10) + "\">" + loopDate.toLocaleDateString("en-GB") + "</option>";
+		html += "<option value=\"" + loopDate.toISOString().slice(0, 10) + "\">" + fixDate(loopDate.toISOString().split('T')[0]) + "</option>";
 		
 		loopDate.setDate(loopDate.getDate() - 1);
 	}

@@ -45,7 +45,7 @@ function getRadiators() {
 		for (var i = 0; i < radiators.length; i++) {
 			let radiator = radiators[i];
 			
-			let palletNumber = radiator.group.title.replace(' AM', '').replace(' PM', '');
+			let palletNumber = fixDate(radiator.group.title.replace(' AM', '').replace(' PM', ''));
 			
 			let palletSummaryPallet = findInArray(palletSummary, 'palletNumber', palletNumber);
 			let palletAlreadyInPalletSummary = (palletSummaryPallet == undefined);
