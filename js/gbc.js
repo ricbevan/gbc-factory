@@ -96,7 +96,7 @@
 		Constructor.prototype.show = function () {
 			this.each(function (item) {
 				item.removeAttribute('hidden');
-				item.style.visibility = 'visible';;
+				item.style.visibility = 'visible';
 			});
 			return this;
 		};
