@@ -115,7 +115,7 @@ function getRadiators(purchaseOrderRadiatorIds) {
 				let radiatorReceived = ((findInArray(palletRadiator.column_values, 'id', 'color0').text == 'Received') ? ' checked' : '');
 				
 				html += '<li>';
-				html += '<label>';
+				html += '<label uk-tooltip="title: ' + palletRadiator.id + '; delay: 1000; pos: right">';
 				html += '<input class="uk-checkbox" type="checkbox" id="' + palletRadiator.id + '" data-changed="false"' + radiatorReceived + '> ';
 				html += '[' + radiatorColour + '] ' + palletRadiator.name;
 				html += '</label>'
