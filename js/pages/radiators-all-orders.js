@@ -66,11 +66,37 @@ function getRadiators(purchaseOrderRadiatorIds) {
 		
 		let radiators = data['data']['boards'][0]['items'];
 		
+		var html = '<div uk-filter="target: .colour-filter">';
+		
+		var colours = [];
+		
+		// loop through radiators and add them to a summary array, grouped by pallet number
+		for (var i = 0; i < radiators.length; i++) {
+			let radiator = radiators[i];
+			let radiatorColour = findInArray(radiator.column_values, 'id', 'color').text;
+			colours.push(radiatorColour);
+		}
+		
+		colours = [... new Set(colours)].sort(); // get unique colours, sorted
+		
+		if (colours.length > 0) {
+			html += '<ul class="uk-subnav uk-subnav-pill gbc-orange-pill">';
+			html += '<li class="uk-active" uk-filter-control><a href="#">All</a></li>';
+			
+			for (var i = 0; i < colours.length; i++) {
+				let colour = colours[i];
+				
+				html += '<li uk-filter-control="filter: .tag-' + colour.replace(/\W/g, '') + '"><a href="#">' + colour + '</a></li>';
+			}
+			
+			html += '</ul>';
+		}
+		
 		radiators.sort((a, b) => (
 			(findInArray(a.column_values, 'id', 'color').text + a.name) > 
 			(findInArray(b.column_values, 'id', 'color').text + b.name)) ? 1 : -1);
 		
-		var html = '<ul class="uk-list uk-list-striped">';
+		html += '<ul class="uk-list uk-list-striped colour-filter">';
 		
 		for (var i = 0; i < radiators.length; i++) {
 			let radiator = radiators[i];
@@ -83,7 +109,7 @@ function getRadiators(purchaseOrderRadiatorIds) {
 			let radiatorDispatchDate = findInArray(radiator.column_values, 'id', 'lookup').text;
 			let radiatorStatus = findInArray(radiator.column_values, 'id', 'color0').text;
 			
-			html += '<li>';
+			html += '<li class="tag-' + radiatorColour.replace(/\W/g, '') + '">';
 			html += '<span class="uk-text-bold">';
 			html += '[' + radiatorColour + '] ';
 			html += radiatorCode;
@@ -115,7 +141,8 @@ function getRadiators(purchaseOrderRadiatorIds) {
 			html += '</li>';
 		}
 		
-		html += '</ul>'
+		html += '</ul>';
+		html += '</div>';
 		
 		gbc('#page').html(html).show();
 	});
