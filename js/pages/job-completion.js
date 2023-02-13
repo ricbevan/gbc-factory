@@ -1,14 +1,22 @@
+var jobId = '';
+
 getStarted();
 
 document.addEventListener("DOMContentLoaded", function() {	
 	gbc('#job-search').on('click', function(e) {
-		loadJob(document.querySelectorAll('#job-number')[0].value);
+		let jobNumber = gbc('#job-number').val();
+		loadJob(jobNumber);
 	});
 	
 	gbc('#job-number').on('keyup', function(e) {
 		if (e.keyCode === 13) {
-			loadJob(document.querySelectorAll('#job-number')[0].value);
+			let jobNumber = gbc('#job-number').val();
+			loadJob(jobNumber);
 		}
+	});
+	
+	gbc('#job-powder-save').on('click', function(e) {
+		savePowder();
 	});
 });
 
@@ -21,6 +29,8 @@ function loadJob(jobNumber) {
 	let query = '{ items_by_column_values ' +
 		'(board_id: 608197264, column_id: "name", column_value: "' + jobNumber + '") ' +
 		'{ id, name, column_values { id, text, value }, updates(limit: 10) { body } } }';
+	
+	jobId = '';
 	
 	mondayAPI(query, function(data) {
 		var job = data['data']['items_by_column_values'];
@@ -37,9 +47,22 @@ function loadJob(jobNumber) {
 			return false;
 		}
 		
+		jobId = job.id;
+		
 		gbc('#job-roles').attr('hidden', true);
 		
 		let jobColumns = job['column_values'];
+		
+		var itemUpdates = job['updates'];
+		var itemUpdateString = '';
+		
+		for (i = 0; i < itemUpdates.length; i++) {
+		  itemUpdateString += itemUpdates[i]['body'];
+		}
+		
+		gbc('#previous-colour-and-manufacturers').html(itemUpdateString);
+		
+		gbc('#job-updates').html(itemUpdateString);
 		
 		// loop through each column in Monday, and for each, see if it's a column we need
 		for (var i = 0; i < jobColumns.length; i++) {
@@ -85,7 +108,7 @@ function loadJob(jobNumber) {
 					gbc('#' + jobCompletionColumn.office).removeClass('uk-card-primary').removeClass('uk-card-default').addClass('uk-card-' + colour).addClass('gbc-box-link');
 					gbc('#' + jobCompletionColumn.office + ' span').attr('uk-icon', icon);
 					
-					gbc('#' + jobCompletionColumn.office).attr('data-assigned', JSON.stringify(assigned)).attr('data-job-id', job.id).attr('data-column-id', jobColumn.id);
+					gbc('#' + jobCompletionColumn.office).attr('data-assigned', JSON.stringify(assigned)).attr('data-job-id', jobId).attr('data-column-id', jobColumn.id);
 					
 					gbc('#' + jobCompletionColumn.office).on('click', function(e) {
 						updateJob(this);
@@ -119,6 +142,30 @@ function updateJob(roleButton) {
 		let jobNumber = job.name;
 		loadJob(jobNumber);
 	});
+}
+
+function savePowder() {
+	let powder = document.querySelectorAll('#colour-and-manufacturer')[0].value;
+	
+	if (powder == '') {
+		UIkit.notification('Please enter the colour and manufacturer', 'warning');
+	} else {
+		let query = 'mutation { create_update (item_id: ' + jobId +
+			', body: "<p>' + userName + ': ' + powder + '</p>") { id } }';
+		
+		mondayAPI(query, function(data) {
+			
+			let query2 = ' { boards(ids:608197264) { items(ids:' + jobId + ') { name } } }';
+			
+			mondayAPI(query2, function(data2) {
+				let jobNumber = data2['data']['boards'][0]['items'][0]['name'];
+				loadJob(jobNumber);
+			});
+			
+			console.log(data);
+			UIkit.notification('Colour and manufacturer saved', 'success');
+		});
+	}
 }
 
 const jobCompletionColumns = [
