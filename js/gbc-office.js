@@ -1,5 +1,6 @@
 var debuggingOn = false;
 var userId;
+var userName;
 var apiKey;
 var loadingCount = 0;
 

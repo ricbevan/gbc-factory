@@ -10,8 +10,8 @@ function logOn() {
 		if (loggedInUser.length != 1) {
 			throw 'No user with userID [' + userId + '] (logOn)';
 		} else {
-			var username = loggedInUser[0]['name'];
-			document.querySelectorAll('#username')[0].setAttribute('uk-tooltip', 'title: Logged in as ' + username + '; pos: bottom');
+			userName = loggedInUser[0]['name'];
+			document.querySelectorAll('#username')[0].setAttribute('uk-tooltip', 'title: Logged in as ' + userName + '; pos: bottom');
 		}
 	});
 }
