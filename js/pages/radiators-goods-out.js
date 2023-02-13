@@ -73,7 +73,7 @@ function getRadiators() {
 			for (var j = 0; j < palletRadiators.length; j++) {
 				let palletRadiator = palletRadiators[j];
 				
-				let linkedPalletText = findInArray(palletRadiator.column_values, 'id', 'board_relation6').text;
+				let linkedPalletText = findInArray(palletRadiator.column_values, 'id', 'board_relation7').text;
 				
 				if (linkedPalletText == "") {
 					incompleteRadiators += 1;
@@ -105,8 +105,8 @@ function getRadiators() {
 				var checkboxAlreadyOnPallet = '';
 				
 				let radiatorColour = findInArray(palletRadiator.column_values, 'id', 'color').text;
-				let linkedPalletId = findInArray(palletRadiator.column_values, 'id', 'board_relation6').value;
-				let linkedPalletText = findInArray(palletRadiator.column_values, 'id', 'board_relation6').text;
+				let linkedPalletId = findInArray(palletRadiator.column_values, 'id', 'board_relation7').value;
+				let linkedPalletText = findInArray(palletRadiator.column_values, 'id', 'board_relation7').text;
 				
 				if (linkedPalletId != null) { // if radiator is linked to a pallet
 					let assignedPalletId2 = JSON.parse(linkedPalletId);
@@ -187,10 +187,10 @@ function saveRadiators() {
 		let radiatorId = radiator.id;
 		let radiatorChecked = radiator.checked;
 		
-		var radiatorPalletId = JSON.stringify('{"board_relation6" : {"item_ids": [' + goodsOutPallet + ']} }');
+		var radiatorPalletId = JSON.stringify('{"board_relation7" : {"item_ids": [' + goodsOutPallet + ']} }');
 		
 		if (!radiatorChecked) {
-			radiatorPalletId = JSON.stringify('{"board_relation6" : {} }');
+			radiatorPalletId = JSON.stringify('{"board_relation7" : {} }');
 		}
 		
 		query += ' update' + radiatorId + ': change_multiple_column_values(item_id: ' + radiatorId + ', board_id: 3852829643, column_values: ' + radiatorPalletId + ') { id }';
