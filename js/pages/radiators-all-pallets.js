@@ -88,7 +88,7 @@ function getRadiatorsOnPallets(palletRadiatorIds) {
 				radiatorIdArr.push(radiatorId['linkedPulseId']);
 			}
 			
-			let query = ' { boards(ids:3852829643) { items(ids: [' + radiatorIdArr.join(',') + ']) { id name group { title } column_values(ids: ["color", "numeric3", "date", "board_relation7", "lookup", "color0"]) { title text id } } } } ';
+			let query = ' { boards(ids:3852829643) { items(ids: [' + radiatorIdArr.join(',') + ']) { id name group { title } column_values(ids: ["color", "numeric3", "date", "board_relation7", "lookup8", "color0"]) { title text id } } } } ';
 			
 			mondayAPI(query, function(data) {
 				
@@ -104,7 +104,7 @@ function getRadiatorsOnPallets(palletRadiatorIds) {
 					let radiatorReceivedPallet = findInArray(radiator.column_values, 'id', 'numeric3').text;
 					let radiatorReceivedDate = findInArray(radiator.column_values, 'id', 'date').text;
 					let radiatorDispatchPallet = findInArray(radiator.column_values, 'id', 'board_relation7').text;
-					let radiatorDispatchDate = findInArray(radiator.column_values, 'id', 'lookup').text;
+					let radiatorDispatchDate = findInArray(radiator.column_values, 'id', 'lookup8').text;
 					let radiatorStatus = findInArray(radiator.column_values, 'id', 'color0').text;
 					let radiatorPurchaseOrder = radiator.group.title;
 					
