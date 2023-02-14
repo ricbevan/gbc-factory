@@ -10,7 +10,8 @@ let boardId_Radiator = '3852829643';
 let columnId_RadiatorPallet_Status = 'color';
 let columnId_Radiator_Status = 'color0';
 let columnId_Radiator_Colour = 'color';
-let columnId_Radiator_Pallet = 'board_relation7';
+let columnId_Radiator_Pallet_Outgoing = 'board_relation7';
+let columnId_Radiator_Pallet_Incoming = 'numeric3';
 
 function getColumnText(arr, column) {
 	return getColumnRow(arr, column)['text'];
