@@ -4,6 +4,27 @@ var userName;
 var apiKey;
 var loadingCount = 0;
 
+let boardId_RadiatorPallet = '3894008168';
+let boardId_Radiator = '3852829643';
+
+let columnId_RadiatorPallet_Status = 'color';
+let columnId_Radiator_Status = 'color0';
+let columnId_Radiator_Colour = 'color';
+let columnId_Radiator_Pallet = 'board_relation7';
+
+function getColumnText(arr, column) {
+	return getColumnRow(arr, column)['text'];
+}
+
+function getColumnValue(arr, column) {
+	return getColumnRow(arr, column)['value'];
+}
+
+function getColumnRow(arr, column) {
+	let temp = findInArray(arr['column_values'], 'id', column);
+	return temp;
+}
+
 function getLocalStorage(key) {
 	if (key == undefined) {
 		throw 'No key provided (getLocalStorage)';
