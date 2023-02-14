@@ -7,12 +7,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getPallets() {
 	
-	let query = ' { boards (ids: 3894008168) { items { id name column_values(ids:["color", "board_relation"]) { id text } } } } ';
+	let query = ' { boards (ids: ' + boardId_RadiatorPallet + ') { items { id name column_values(ids:["' + columnId_RadiatorPallet_Status + '", "' + columnId_RadiatorPallet_Radiators + '"]) { id text } } } } ';
 	
 	mondayAPI(query, function(data) {
 		
 		let pallets = data['data']['boards'][0]['items'];
 		
+		// sort pallets by pallet number
 		pallets.sort((a, b) => (parseInt(a.name) < parseInt(b.name)) ? 1 : -1);
 		
 		var html = '<option value=\"\" disabled hidden selected>Pallet</option>';
@@ -20,13 +21,15 @@ function getPallets() {
 		for (var i = 0; i < pallets.length; i++) {
 			let pallet = pallets[i];
 			
-			let status = findInArray(pallet.column_values, 'id', 'color').text;
-			let radiators = findInArray(pallet.column_values, 'id', 'board_relation').text;
-			let radiatorCount = (radiators == '') ? 0 : findInArray(pallet.column_values, 'id', 'board_relation').text.split(',').length;
-			let radiatorCountText = radiatorCount + ' rad' + ((radiatorCount == 1) ? '' : 's');
+			let palletId = pallet.id;
+			let palletName = pallet.name;
+			let palletStatus = getColumnText(pallet, columnId_RadiatorPallet_Status);
+			let palletRadiators = getColumnText(pallet, columnId_RadiatorPallet_Radiators);
+			let palletRadiatorCount = ((palletRadiators == '') ? 0 : palletRadiators.split(',').length);
+			let palletRadiatorCountText = palletRadiatorCount + ' rad' + ((palletRadiatorCount == 1) ? '' : 's');
 			
-			if (pallet.name != "0") {
-				html += '<option value="' + pallet.id + '">Pallet ' + pallet.name + ' [' + status + '] ' + radiatorCountText + '</option>';
+			if (palletName != "0") {
+				html += '<option value="' + palletId + '">Pallet ' + palletName + ' [' + palletStatus + '] ' + palletRadiatorCountText + '</option>';
 			}
 		}
 		
@@ -43,30 +46,32 @@ function getPallet() {
 	
 	let palletId = gbc('#pallet-number').val();
 	
-	let query = ' { boards(ids: 3894008168) { items(ids: ' + palletId + ') { column_values(ids: ["date", "color", "multiple_person", "board_relation"]) { id text value } } } } ';
+	let query = ' { boards(ids: ' + boardId_RadiatorPallet + ') { items(ids: ' + palletId + ') { column_values(ids: ["' + columnId_RadiatorPallet_DispatchedDate + '", "' + columnId_RadiatorPallet_Status + '", "' + columnId_RadiatorPallet_DeliveredBy + '", "' + columnId_RadiatorPallet_Radiators + '"]) { id text value } } } } ';
 	
 	mondayAPI(query, function(data) {
-		
-		console.log(data);
 		
 		html = '';
 		
 		let pallet = data['data']['boards'][0]['items'][0];
 		
-		let palletDate = findInArray(pallet.column_values, 'id', 'date').text;
-		let palletStatus = findInArray(pallet.column_values, 'id', 'color').text;
-		let palletDeliveredBy = findInArray(pallet.column_values, 'id', 'multiple_person').text;
-		let palletRadiatorIds = findInArray(pallet.column_values, 'id', 'board_relation').value;
+		let palletDate = getColumnText(pallet, columnId_RadiatorPallet_DispatchedDate);
+		let palletStatus = getColumnText(pallet, columnId_RadiatorPallet_Status);
+		let palletDeliveredBy = getColumnText(pallet, columnId_RadiatorPallet_DeliveredBy);
+		let palletRadiatorIds = getColumnValue(pallet, columnId_RadiatorPallet_Radiators);
+		
+		html += '<p>';
 		
 		if (palletStatus == 'At GBC') {
-			html += '<p>Currently at GBC.</p>';
+			html += 'Currently at GBC.';
 		} else {
-			html += '<p>Delivered by ' + palletDeliveredBy + ' on ' + fixDate(palletDate) + '.</p>';
+			html += 'Delivered by ' + palletDeliveredBy + ' on ' + fixDate(palletDate);
 		}
 		
-		getRadiatorsOnPallets(palletRadiatorIds);
+		html += '</p>';
 		
 		gbc('#page').show().html(html);
+		
+		getRadiatorsOnPallets(palletRadiatorIds);
 		
 	});
 }
@@ -88,27 +93,29 @@ function getRadiatorsOnPallets(palletRadiatorIds) {
 				radiatorIdArr.push(radiatorId['linkedPulseId']);
 			}
 			
-			let query = ' { boards(ids:3852829643) { items(ids: [' + radiatorIdArr.join(',') + ']) { id name group { title } column_values(ids: ["color", "numeric3", "date", "board_relation7", "lookup8", "color0"]) { title text id } } } } ';
+			let query = ' { boards(ids:' + boardId_Radiator + ') { items(ids: [' + radiatorIdArr.join(',') + ']) { id name group { title } column_values(ids: ["' + columnId_Radiator_Colour + '", "' + columnId_Radiator_PalletIncoming + '", "' + columnId_Radiator_ReceivedDate + '", "' + columnId_Radiator_PalletOutgoing + '", "' + columnId_Radiator_DispatchDate + '", "' + columnId_Radiator_Status + '"]) {  text id } } } } ';
 			
 			mondayAPI(query, function(data) {
 				
-				html += '<h3 class="uk-card-title">Radiators on pallet</h3><ul class="uk-list uk-list-striped">';
+				html += '<ul class="uk-list uk-list-striped">';
 				
 				let radiators = data['data']['boards'][0]['items'];
 				
 				for (var i = 0; i < radiators.length; i++) {
 					let radiator = radiators[i];
 					
+					let radiatorId = radiator.id;
 					let radiatorCode = radiator.name;
-					let radiatorColour = findInArray(radiator.column_values, 'id', 'color').text;
-					let radiatorReceivedPallet = findInArray(radiator.column_values, 'id', 'numeric3').text;
-					let radiatorReceivedDate = findInArray(radiator.column_values, 'id', 'date').text;
-					let radiatorDispatchPallet = findInArray(radiator.column_values, 'id', 'board_relation7').text;
-					let radiatorDispatchDate = findInArray(radiator.column_values, 'id', 'lookup8').text;
-					let radiatorStatus = findInArray(radiator.column_values, 'id', 'color0').text;
+					let radiatorColour = getColumnText(radiator, columnId_Radiator_Colour);
+					let radiatorReceivedPallet = getColumnText(radiator,columnId_Radiator_PalletIncoming );
+					let radiatorReceivedDate = getColumnText(radiator, columnId_Radiator_ReceivedDate);
+					let radiatorDispatchPallet = getColumnText(radiator, columnId_Radiator_PalletOutgoing);
+					let radiatorDispatchDate = getColumnText(radiator, columnId_Radiator_DispatchDate);
+					let radiatorStatus = getColumnText(radiator, columnId_Radiator_Status);
 					let radiatorPurchaseOrder = radiator.group.title;
 					
-					html += '<li class="tag-' + radiatorColour.replace(/\W/g, '') + '">';
+					html += '<li class="uk-flex uk-flex-middle">';
+					html += '<p class="uk-flex-1 uk-margin-remove-bottom">';
 					html += '<span class="uk-text-bold">';
 					html += '[' + radiatorColour + '] ';
 					html += radiatorCode;
@@ -120,13 +127,15 @@ function getRadiatorsOnPallets(palletRadiatorIds) {
 					html += '<br />';
 					html += '<span class="uk-text-light uk-text-small">';
 					
-					if (radiatorStatus == "At Limitless") {
+					if (radiatorStatus == "Not Received") {
 						html += 'Not received yet';
 					} else {
 						html += 'Received on pallet ' + radiatorReceivedPallet + ', on ' + fixDate(radiatorReceivedDate) + '. PO ' + radiatorPurchaseOrder;
 					}
 					
 					html += '</span>';
+					html += '</p>';
+					html += '<span uk-icon="icon: info;" class="uk-flex-none" uk-tooltip="title: ' + radiatorId + '; pos: left"></span>'
 					
 					html += '</li>';
 				}

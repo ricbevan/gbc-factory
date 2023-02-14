@@ -4,27 +4,21 @@ var userName;
 var apiKey;
 var loadingCount = 0;
 
+// Radiator pallet table
 let boardId_RadiatorPallet = '3894008168';
-let boardId_Radiator = '3852829643';
-
 let columnId_RadiatorPallet_Status = 'color';
+let columnId_RadiatorPallet_Radiators = 'board_relation';
+let columnId_RadiatorPallet_DispatchedDate = 'date';
+let columnId_RadiatorPallet_DeliveredBy = 'multiple_person';
+
+// Radiator table
+let boardId_Radiator = '3852829643';
 let columnId_Radiator_Status = 'color0';
 let columnId_Radiator_Colour = 'color';
-let columnId_Radiator_Pallet_Outgoing = 'board_relation7';
-let columnId_Radiator_Pallet_Incoming = 'numeric3';
-
-function getColumnText(arr, column) {
-	return getColumnRow(arr, column)['text'];
-}
-
-function getColumnValue(arr, column) {
-	return getColumnRow(arr, column)['value'];
-}
-
-function getColumnRow(arr, column) {
-	let temp = findInArray(arr['column_values'], 'id', column);
-	return temp;
-}
+let columnId_Radiator_PalletOutgoing = 'board_relation7';
+let columnId_Radiator_PalletIncoming = 'numeric3';
+let columnId_Radiator_ReceivedDate = 'date';
+let columnId_Radiator_DispatchDate = 'lookup8';
 
 function getLocalStorage(key) {
 	if (key == undefined) {
@@ -49,6 +43,10 @@ function setLocalStorage(key, val) {
 function loadLocalVariables() {
 	userId = getLocalStorage('User ID');
 	apiKey = getLocalStorage('API Key');
+}
+
+function alphanumeric(str) {
+	return str.replace(/\W/g, '');
 }
 
 function displayError(errorMessage) {
@@ -81,6 +79,19 @@ function fixDate(date) {
 	} else {
 		return date;
 	}
+}
+
+function getColumnRow(arr, column) {
+	let temp = findInArray(arr['column_values'], 'id', column);
+	return temp;
+}
+
+function getColumnText(arr, column) {
+	return getColumnRow(arr, column)['text'];
+}
+
+function getColumnValue(arr, column) {
+	return getColumnRow(arr, column)['value'];
 }
 
 function hideLoading() {

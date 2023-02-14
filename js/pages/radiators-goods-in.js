@@ -60,7 +60,7 @@ function getPurchaseOrder() {
 
 function getRadiators(purchaseOrderRadiatorIds) {
 	
-	let query = ' { boards(ids:' + boardId_Radiator + ') { items(ids: [' + purchaseOrderRadiatorIds + ']) { id name column_values(ids:["' + columnId_Radiator_Colour + '","' + columnId_Radiator_Pallet_Incoming + '","'+ columnId_Radiator_Status + '"]) { text id } } } } ';
+	let query = ' { boards(ids:' + boardId_Radiator + ') { items(ids: [' + purchaseOrderRadiatorIds + ']) { id name column_values(ids:["' + columnId_Radiator_Colour + '","' + columnId_Radiator_PalletIncoming + '","'+ columnId_Radiator_Status + '"]) { text id } } } } ';
 	
 	mondayAPI(query, function(data) {
 		
@@ -72,7 +72,7 @@ function getRadiators(purchaseOrderRadiatorIds) {
 		for (var i = 0; i < purchaseOrders.length; i++) {
 			let purchaseOrder = purchaseOrders[i];
 			
-			let palletNumber = getColumnText(purchaseOrder, columnId_Radiator_Pallet_Incoming);
+			let palletNumber = getColumnText(purchaseOrder, columnId_Radiator_PalletIncoming);
 			
 			let palletSummaryPallet = findInArray(palletSummary, 'palletNumber', palletNumber);
 			let palletAlreadyInPalletSummary = (palletSummaryPallet == undefined);
@@ -118,11 +118,12 @@ function getRadiators(purchaseOrderRadiatorIds) {
 				let radiatorColour = getColumnText(radiator, columnId_Radiator_Colour);
 				let radiatorReceived = ((getColumnText(radiator, columnId_Radiator_Status) == 'Received') ? ' checked' : '');
 				
-				html += '<li>';
-				html += '<label uk-tooltip="title: ' + radiatorId + '; delay: 1000; pos: right">';
+				html += '<li class="uk-flex uk-flex-middle">';
+				html += '<label class="uk-flex-1">';
 				html += '<input class="uk-checkbox" type="checkbox" id="' + radiatorId + '" data-changed="false"' + radiatorReceived + '> ';
 				html += '[' + radiatorColour + '] ' + radiatorName;
 				html += '</label>'
+				html += '<span uk-icon="icon: info;" class="uk-flex-none" uk-tooltip="title: ' + radiatorId + '; pos: left"></span>'
 				html += '</li>';
 			}
 				
@@ -166,9 +167,11 @@ function saveRadiators() {
 	
 	gbc('#page ul input[type=checkbox][data-changed="true"]').each(function(radiator) {
 		let radiatorId = radiator.id;
-		let radiatorChecked = JSON.stringify('{"color0" : {"label":"' + (radiator.checked ? 'Received' : '') + '"} }');
+		let radiatorChecked = radiator.checked;
 		
-		query += ' update' + radiatorId + ': change_multiple_column_values(item_id: ' + radiatorId + ', board_id: 3852829643, column_values: ' + radiatorChecked + ') { id }';
+		let radiatorColumnJson = JSON.stringify('{"' + columnId_Radiator_Status + '" : {"label":"' + (radiatorChecked ? 'Received' : '') + '"} }');
+		
+		query += ' update' + radiatorId + ': change_multiple_column_values(item_id: ' + radiatorId + ', board_id: ' + boardId_Radiator + ', column_values: ' + radiatorColumnJson + ') { id }';
 	});
 	
 	query += ' }';

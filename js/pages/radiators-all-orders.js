@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getPurchaseOrders() {
 	
-	let query = ' { boards(ids:3852829643) { id name groups { id title } } } ';
+	let query = ' { boards(ids:' + boardId_Radiator + ') { groups { id title } } } ';
 	
 	mondayAPI(query, function(data) {
 		
@@ -22,7 +22,10 @@ function getPurchaseOrders() {
 		for (var i = 0; i < purchaseOrders.length; i++) {
 			let purchaseOrder = purchaseOrders[i];
 			
-			html += "<option value=\"" + purchaseOrder.id + "\">" + fixDate(purchaseOrder.title) + "</option>";
+			let purchaseOrderId = purchaseOrder.id;
+			let purchaseOrderName = purchaseOrder.title;
+			
+			html += "<option value=\"" + purchaseOrderId + "\">" + fixDate(purchaseOrderName) + "</option>";
 		}
 		
 		gbc('#purchase-order').html(html).on('change', function(e) {
@@ -37,30 +40,32 @@ function getPurchaseOrder() {
 	
 	let purchaseOrderId = gbc('#purchase-order').val();
 	
-	let query = ' { boards(ids:3852829643) { groups(ids: "' + purchaseOrderId + '") { id items { id } } } } ';
+	let query = ' { boards(ids:' + boardId_Radiator + ') { groups(ids: "' + purchaseOrderId + '") { id items { id } } } } ';
 	
 	mondayAPI(query, function(data) {
 		
-		var purchaseOrderRadiatorIds = [];
+		var radiatorIds = [];
 		
-		let radiatorIds = data['data']['boards'][0]['groups'][0]['items'];
+		let radiators = data['data']['boards'][0]['groups'][0]['items'];
 		
-		for (var i = 0; i < radiatorIds.length; i++) {
-			let radiatorId = radiatorIds[i];
+		for (var i = 0; i < radiators.length; i++) {
+			let radiator = radiators[i];
 			
-			purchaseOrderRadiatorIds.push(radiatorId.id);
+			let radiatorId = radiator.id;
+			
+			radiatorIds.push(radiatorId);
 		}
 		
-		purchaseOrderRadiatorIds = purchaseOrderRadiatorIds.join(',');
+		radiatorIds = radiatorIds.join(',');
 		
-		getRadiators(purchaseOrderRadiatorIds);
+		getRadiators(radiatorIds);
 	});
 	
 }
 
-function getRadiators(purchaseOrderRadiatorIds) {
+function getRadiators(radiatorIds) {
 	
-	let query = ' { boards(ids:3852829643) { items(ids: [' + purchaseOrderRadiatorIds + ']) { id name column_values { title text id } } } } ';
+	let query = ' { boards(ids:' + boardId_Radiator + ') { items(ids: [' + radiatorIds + ']) { id name column_values(ids:["' + columnId_Radiator_Colour + '","' + columnId_Radiator_PalletIncoming + '","' + columnId_Radiator_ReceivedDate + '","' + columnId_Radiator_PalletOutgoing + '","' + columnId_Radiator_DispatchDate + '","' + columnId_Radiator_Status + '"]) { text id } } } } ';
 	
 	mondayAPI(query, function(data) {
 		
@@ -73,7 +78,7 @@ function getRadiators(purchaseOrderRadiatorIds) {
 		// loop through radiators and add them to a summary array, grouped by pallet number
 		for (var i = 0; i < radiators.length; i++) {
 			let radiator = radiators[i];
-			let radiatorColour = findInArray(radiator.column_values, 'id', 'color').text;
+			let radiatorColour = getColumnText(radiator, columnId_Radiator_Colour);
 			colours.push(radiatorColour);
 		}
 		
@@ -86,30 +91,32 @@ function getRadiators(purchaseOrderRadiatorIds) {
 			for (var i = 0; i < colours.length; i++) {
 				let colour = colours[i];
 				
-				html += '<li uk-filter-control="filter: .tag-' + colour.replace(/\W/g, '') + '"><a href="#">' + colour + '</a></li>';
+				html += '<li uk-filter-control="filter: .tag-' + alphanumeric(colour) + '"><a href="#">' + colour + '</a></li>';
 			}
 			
 			html += '</ul>';
 		}
 		
 		radiators.sort((a, b) => (
-			(findInArray(a.column_values, 'id', 'color').text + a.name) > 
-			(findInArray(b.column_values, 'id', 'color').text + b.name)) ? 1 : -1);
+			(getColumnText(a, columnId_Radiator_Colour) + a.name) > 
+			(getColumnText(b, columnId_Radiator_Colour) + b.name)) ? 1 : -1);
 		
 		html += '<ul class="uk-list uk-list-striped colour-filter">';
 		
 		for (var i = 0; i < radiators.length; i++) {
 			let radiator = radiators[i];
 			
+			let radiatorId = radiator.id;
 			let radiatorCode = radiator.name;
-			let radiatorColour = findInArray(radiator.column_values, 'id', 'color').text;
-			let radiatorReceivedPallet = findInArray(radiator.column_values, 'id', 'numeric3').text;
-			let radiatorReceivedDate = findInArray(radiator.column_values, 'id', 'date').text;
-			let radiatorDispatchPallet = findInArray(radiator.column_values, 'id', 'board_relation7').text;
-			let radiatorDispatchDate = findInArray(radiator.column_values, 'id', 'lookup8').text;
-			let radiatorStatus = findInArray(radiator.column_values, 'id', 'color0').text;
+			let radiatorColour = getColumnText(radiator, columnId_Radiator_Colour);
+			let radiatorReceivedPallet = getColumnText(radiator, columnId_Radiator_PalletIncoming);
+			let radiatorReceivedDate = getColumnText(radiator, columnId_Radiator_ReceivedDate);
+			let radiatorDispatchPallet = getColumnText(radiator, columnId_Radiator_PalletOutgoing);
+			let radiatorDispatchDate = getColumnText(radiator, columnId_Radiator_DispatchDate);
+			let radiatorStatus = getColumnText(radiator, columnId_Radiator_Status);
 			
-			html += '<li class="tag-' + radiatorColour.replace(/\W/g, '') + '">';
+			html += '<li class="tag-' + alphanumeric(radiatorColour) + ' uk-flex uk-flex-middle">';
+			html += '<p class="uk-flex-1">';
 			html += '<span class="uk-text-bold">';
 			html += '[' + radiatorColour + '] ';
 			html += radiatorCode;
@@ -138,6 +145,8 @@ function getRadiators(purchaseOrderRadiatorIds) {
 			}
 			
 			html += '</span>';
+			html += '</p>';
+			html += '<span uk-icon="icon: info;" class="uk-flex-none" uk-tooltip="title: ' + radiatorId + '; pos: left"></span>'
 			html += '</li>';
 		}
 		

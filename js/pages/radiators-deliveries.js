@@ -24,7 +24,7 @@ function getDates() {
 
 function getPallets() {
 	
-	let query = ' { items_by_column_values (board_id: 3894008168, column_id: "color", column_value: "At GBC") { id name } } ';
+	let query = ' { items_by_column_values (board_id: ' + boardId_RadiatorPallet + ', column_id: "' + columnId_RadiatorPallet_Status + '", column_value: "At GBC") { id name } } ';
 	
 	mondayAPI(query, function(data) {
 		
@@ -36,10 +36,13 @@ function getPallets() {
 		for (var i = 0; i < pallets.length; i++) {
 			let pallet = pallets[i];
 			
+			let palletId = pallet.id;
+			let palletName = pallet.name;
+			
 			html += '<li>';
 			html += '<label>';
-			html += '<input class="uk-checkbox" type="checkbox" id="' + pallet.id + '"> ';
-			html += 'Pallet ' + pallet.name;
+			html += '<input class="uk-checkbox" type="checkbox" id="' + palletId + '"> ';
+			html += 'Pallet ' + palletName;
 			html += '</label>'
 			html += '</li>';
 		}
@@ -74,9 +77,9 @@ function saveDelivery() {
 			let pallet = pallets[i];
 			let palletId = pallet.id;
 			
-			var updates = JSON.stringify('{"color" : "Dispatched", "date": {"date" : "' + deliveryDate + '"}, "multiple_person": { "personsAndTeams" : [ { "id": ' + userId + ', "kind" : "person" } ] } }');
+			var updates = JSON.stringify('{"' + columnId_RadiatorPallet_Status + '" : "Dispatched", "' + columnId_RadiatorPallet_DispatchedDate + '": {"date" : "' + deliveryDate + '"}, "' + columnId_RadiatorPallet_DeliveredBy + '": { "personsAndTeams" : [ { "id": ' + userId + ', "kind" : "person" } ] } }');
 			
-			query += ' update' + palletId + ': change_multiple_column_values(item_id: ' + palletId + ', board_id: 3894008168, column_values: ' + updates + ') { id }';
+			query += ' update' + palletId + ': change_multiple_column_values(item_id: ' + palletId + ', board_id: ' + boardId_RadiatorPallet + ', column_values: ' + updates + ') { id }';
 		}
 		
 		query += ' }';

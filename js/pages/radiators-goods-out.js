@@ -36,7 +36,7 @@ function getRadiators() {
 	
 	let goodsOutPallet = gbc('#goods-out-pallet').val();
 	
-	let query = 'query { items_by_column_values (board_id: ' + boardId_Radiator + ', column_id: "' + columnId_Radiator_Status + '", column_value: "Received") { id name group { title } column_values(ids:["' + columnId_Radiator_Pallet_Outgoing + '","' + columnId_Radiator_Colour + '"]) { id text value } } }';
+	let query = 'query { items_by_column_values (board_id: ' + boardId_Radiator + ', column_id: "' + columnId_Radiator_Status + '", column_value: "Received") { id name group { title } column_values(ids:["' + columnId_Radiator_PalletOutgoing + '","' + columnId_Radiator_Colour + '"]) { id text value } } }';
 	
 	mondayAPI(query, function(data) {
 		
@@ -77,7 +77,7 @@ function getRadiators() {
 			for (var j = 0; j < palletRadiators.length; j++) {
 				let palletRadiator = palletRadiators[j];
 				
-				let linkedPalletText = getColumnText(palletRadiator, columnId_Radiator_Pallet_Outgoing);
+				let linkedPalletText = getColumnText(palletRadiator, columnId_Radiator_PalletOutgoing);
 				
 				if (linkedPalletText == "") {
 					incompleteRadiators += 1;
@@ -109,8 +109,8 @@ function getRadiators() {
 				var checkboxAlreadyOnPallet = '';
 				
 				let radiatorColour = getColumnText(palletRadiator, columnId_Radiator_Colour);
-				let linkedPalletId = getColumnValue(palletRadiator, columnId_Radiator_Pallet_Outgoing);
-				let linkedPalletText = getColumnText(palletRadiator, columnId_Radiator_Pallet_Outgoing);
+				let linkedPalletId = getColumnValue(palletRadiator, columnId_Radiator_PalletOutgoing);
+				let linkedPalletText = getColumnText(palletRadiator, columnId_Radiator_PalletOutgoing);
 				
 				if (linkedPalletId != null) { // if radiator is linked to a pallet
 					let assignedPalletId2 = JSON.parse(linkedPalletId);
@@ -186,10 +186,10 @@ function saveRadiators() {
 		let radiatorId = radiator.id;
 		let radiatorChecked = radiator.checked;
 		
-		var radiatorPalletId = JSON.stringify('{"' + columnId_Radiator_Pallet_Outgoing + '" : {"item_ids": [' + goodsOutPallet + ']} }');
+		var radiatorPalletId = JSON.stringify('{"' + columnId_Radiator_PalletOutgoing + '" : {"item_ids": [' + goodsOutPallet + ']} }');
 		
 		if (!radiatorChecked) {
-			radiatorPalletId = JSON.stringify('{"' + columnId_Radiator_Pallet_Outgoing + '" : {} }');
+			radiatorPalletId = JSON.stringify('{"' + columnId_Radiator_PalletOutgoing + '" : {} }');
 		}
 		
 		query += ' update' + radiatorId + ': change_multiple_column_values(item_id: ' + radiatorId + ', board_id: ' + boardId_Radiator + ', column_values: ' + radiatorPalletId + ') { id }';
