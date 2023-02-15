@@ -9,10 +9,11 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 @media only screen and (max-width: 600px) {
-  html * { /* disable text selection on mobile */
+  label, li { /* disable text selection on mobile */
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
+    font-style: italic;
   }
 }
 
