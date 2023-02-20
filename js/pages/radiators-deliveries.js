@@ -94,6 +94,7 @@ function getPallets() {
 
 function saveDelivery() {
 	let deliveryDate = gbc('#radiator-delivery-date').val();
+	let deliveryDriver = gbc('#radiator-delivery-driver').val();
 	let pallets = document.querySelectorAll('#page ul input[type=checkbox]:checked');
 	
 	if (pallets.length == 0) {
@@ -101,7 +102,7 @@ function saveDelivery() {
 		return false;
 	}
 	
-	var confirmMessage = 'Mark ' + pallets.length + ' pallet' + (pallets.length != 1 ? 's' : '') + ' as delivered on ' + deliveryDate + '? This will save immediately, but can take a minute to display.';
+	var confirmMessage = 'Mark ' + pallets.length + ' pallet' + (pallets.length != 1 ? 's' : '') + ' as delivered on ' + fixDate(deliveryDate) + '? This will save immediately, but can take a minute to display.';
 	
 	if (confirm(confirmMessage) == true) {
 		var query = 'mutation {';
@@ -110,7 +111,7 @@ function saveDelivery() {
 			let pallet = pallets[i];
 			let palletId = pallet.id;
 			
-			var updates = JSON.stringify('{"' + columnId_RadiatorPallet_Status + '" : "Dispatched", "' + columnId_RadiatorPallet_DispatchedDate + '": {"date" : "' + deliveryDate + '"}, "' + columnId_RadiatorPallet_DeliveredBy + '": { "personsAndTeams" : [ { "id": ' + userId + ', "kind" : "person" } ] } }');
+			var updates = JSON.stringify('{"' + columnId_RadiatorPallet_Status + '" : "Dispatched", "' + columnId_RadiatorPallet_DispatchedDate + '": {"date" : "' + deliveryDate + '"}, "' + columnId_RadiatorPallet_DeliveredBy + '": { "personsAndTeams" : [ { "id": ' + deliveryDriver + ', "kind" : "person" } ] } }');
 			
 			query += ' update' + palletId + ': change_multiple_column_values(item_id: ' + palletId + ', board_id: ' + boardId_RadiatorPallet + ', column_values: ' + updates + ') { id }';
 		}
