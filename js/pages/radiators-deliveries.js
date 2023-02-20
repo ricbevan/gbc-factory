@@ -3,7 +3,40 @@ getStarted();
 document.addEventListener("DOMContentLoaded", function() {
 	getDates();
 	getPallets();
+	getDrivers();
 });
+
+function getDrivers() {
+	let query = '{ boards(ids: 4013024988) { items { column_values(ids:["person"]) { id value text }} }}';
+	
+	mondayAPI(query, function(data) {
+		let drivers = data['data']['boards'][0]['items'];
+		var html = '';
+		var selectedValue = '';
+		
+		for (var i = 0; i < drivers.length; i++) {
+			
+			let driver = drivers[i];
+			
+			let driverName = getColumnText(driver, 'person');
+			let driverData = getColumnValue(driver, 'person');
+			
+			let driverId = JSON.parse(driverData)['personsAndTeams'][0]['id'];
+			
+			html += "<option value=\"" + driverId + "\">" + driverName + "</option>";
+			
+			if (driverId == userId) {
+				selectedValue = driverId;
+			}
+		}
+		
+		gbc('#radiator-delivery-driver').html(html);
+		
+		if (selectedValue != '') {
+			gbc('#radiator-delivery-driver').val(selectedValue);
+		}
+	});
+}
 
 function getDates() {
 	var html = '<option value=\"\" disabled hidden selected>date</option>';
