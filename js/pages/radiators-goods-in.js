@@ -235,7 +235,7 @@ function saveNote() {
 		UIkit.notification('Please enter a note', 'warning');
 	} else {
 		let query = 'mutation { create_update (item_id: ' + id +
-			', body: "<p>' + note + '</p>") { id } }';
+			', body: "<p>' + userName + ': ' + note + '</p>") { id } }';
 		
 		mondayAPI(query, function(data) {
 			gbc('#radiator-note').val(''); // clear note field
