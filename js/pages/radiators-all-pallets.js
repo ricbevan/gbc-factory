@@ -107,6 +107,10 @@ function getRadiatorsOnPallets(palletRadiatorIds) {
 				
 				let radiators = data['data']['boards'][0]['items'];
 				
+				radiators.sort((a, b) => (
+					(getColumnText(a, columnId_Radiator_Colour) + a.name) > 
+					(getColumnText(b, columnId_Radiator_Colour) + b.name)) ? 1 : -1);
+				
 				for (var i = 0; i < radiators.length; i++) {
 					let radiator = radiators[i];
 					
