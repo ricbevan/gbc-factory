@@ -127,7 +127,7 @@ function getRadiators(purchaseOrderRadiatorIds) {
 				html += '<input class="uk-checkbox" type="checkbox" id="' + radiatorId + '" data-changed="false"' + radiatorReceived + '> ';
 				html += '[' + radiatorColour + '] ' + radiatorName;
 				html += '</label>';
-				html += '<span uk-icon="info" class="uk-flex-none gbc-radiator-info" data-radiatorId="' + radiatorId + '"></span>';
+				html += '<span uk-icon="info" class="uk-flex-none gbc-radiator-info gbc-box-link" data-radiatorId="' + radiatorId + '"></span>';
 				html += '</li>';
 			}
 				
