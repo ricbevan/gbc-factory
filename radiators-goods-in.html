@@ -46,6 +46,21 @@
 					</div>
 				</div>
 			</div>
+			
+			<div id="radiator-modal" uk-modal>
+				<div class="uk-modal-dialog uk-modal-body">
+					<h2 class="uk-modal-title" id="radiator-modal-title"></h2>
+					<h4>ID: <span  id="radiator-modal-id"></span></h4>
+					<ul class="uk-list uk-list-divider" id="radiator-modal-notes">
+						<li>No notes</li>
+					</ul>
+					<input class="uk-input" id="radiator-note" type="text" placeholder="note" />
+					<p class="uk-text-right">
+						<button class="uk-button uk-button-default uk-modal-close" type="button">Close</button>
+						<button class="uk-button uk-button-primary" type="button" id="save-radiator-note">Add Note</button>
+					</p>
+				</div>
+			</div>
 		</div>
 		<script src="js/gbc.js"></script>
 		<script src="js/gbc-office.js"></script>

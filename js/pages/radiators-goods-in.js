@@ -2,6 +2,10 @@ getStarted();
 
 document.addEventListener("DOMContentLoaded", function() {
 	getPurchaseOrders();
+	
+	gbc('#save-radiator-note').on('click', function() {
+		saveNote();
+	});
 });
 
 function getPurchaseOrders() {
@@ -122,8 +126,8 @@ function getRadiators(purchaseOrderRadiatorIds) {
 				html += '<label class="uk-flex-1">';
 				html += '<input class="uk-checkbox" type="checkbox" id="' + radiatorId + '" data-changed="false"' + radiatorReceived + '> ';
 				html += '[' + radiatorColour + '] ' + radiatorName;
-				html += '</label>'
-				html += '<span uk-icon="icon: info;" class="uk-flex-none" uk-tooltip="title: ' + radiatorId + '; pos: left"></span>'
+				html += '</label>';
+				html += '<span uk-icon="info" class="uk-flex-none gbc-radiator-info" data-radiatorId="' + radiatorId + '"></span>';
 				html += '</li>';
 			}
 				
@@ -146,6 +150,10 @@ function getRadiators(purchaseOrderRadiatorIds) {
 		gbc('#page ul input[type="checkbox"]').on('click', function(e) {
 			e.target.dataset.changed = "true";
 		});
+		
+		gbc('#page ul > li > .gbc-radiator-info').on('click', function(radiator) {
+			getRadiatorDetails(radiator);
+		});
 	});
 }
 
@@ -159,6 +167,43 @@ function selectAllOnPallet(pallet) {
 		palletCheckbox.checked = selectAllCheckbox;
 		palletCheckbox.dataset.changed = "true";
 	}
+}
+
+function getRadiatorDetails(radiator) {
+	let radiatorId = radiator.target.closest('.gbc-radiator-info').getAttribute('data-radiatorid');
+	
+	let query = ' { boards(ids:' + boardId_Radiator + ') { items(ids: ' + radiatorId + ') { name, updates(limit: 10) { body }, column_values(ids:["' + columnId_Radiator_Colour + '"]) { text id } } } } ';
+	
+	mondayAPI(query, function(data) {
+		let radiator = data['data']['boards'][0]['items'][0];
+		
+		let radiatorName = radiator['name'];
+		let radiatorColour = getColumnText(radiator, columnId_Radiator_Colour);
+		let radiatorUpdates = radiator['updates'];
+		
+		let modalTitle = '[' + radiatorColour + '] ' + radiatorName;
+		let modalId = radiatorName;
+		
+		var html = '';
+		
+		if (radiatorUpdates.length > 0) {
+			for (var i = 0; i < radiatorUpdates.length; i++) {
+				let radiatorUpdate = radiatorUpdates[i];
+				
+				let updateText = radiatorUpdate.body;
+				
+				html += '<li>' + updateText + '</li>';
+			}
+		} else {
+			html = '<li>No notes</li>';
+		}
+		
+		gbc('#radiator-modal-title').text(modalTitle);
+		gbc('#radiator-modal-id').text(radiatorId);
+		gbc('#radiator-modal-notes').html(html);
+		
+		UIkit.modal('#radiator-modal').show();
+	});
 }
 
 function saveRadiators() {
@@ -180,4 +225,22 @@ function saveRadiators() {
 		UIkit.notification('Radiators saved', 'success');
 	});
 	
+}
+
+function saveNote() {
+	let id = gbc('#radiator-modal-id').text();
+	let note = gbc('#radiator-note').val();
+	
+	if (note == '') {
+		UIkit.notification('Please enter a note', 'warning');
+	} else {
+		let query = 'mutation { create_update (item_id: ' + id +
+			', body: "<p>' + note + '</p>") { id } }';
+		
+		mondayAPI(query, function(data) {
+			gbc('#radiator-note').val(''); // clear note field
+			UIkit.modal('#radiator-modal').hide();
+			UIkit.notification('Note saved', 'success');
+		});
+	}
 }
