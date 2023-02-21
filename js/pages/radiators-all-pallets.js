@@ -1,8 +1,13 @@
 getStarted();
 var html = '';
+var maxPalletNumber = 0;
 
 document.addEventListener("DOMContentLoaded", function() {
 	getPallets();
+	
+	gbc('#add-pallets').on('click', function() {
+		addPallets();
+	});
 });
 
 function getPallets() {
@@ -30,6 +35,7 @@ function getPallets() {
 			
 			if (palletName != "0") {
 				html += '<option value="' + palletId + '">Pallet ' + palletName + ' [' + palletStatus + '] ' + palletRadiatorCountText + '</option>';
+				maxPalletNumber = (parseInt(maxPalletNumber) < parseInt(palletName) ? parseInt(palletName) : maxPalletNumber); // get max radiator number
 			}
 		}
 		
@@ -146,5 +152,28 @@ function getRadiatorsOnPallets(palletRadiatorIds) {
 				
 			});
 		}
+	}
+}
+
+function addPallets() {
+	let currentMaxPallet = maxPalletNumber;
+	let createPalletsFrom = currentMaxPallet + 1;
+	let createPalletsTo = currentMaxPallet + 10;
+	
+	let confirmText = 'Create pallets ' + createPalletsFrom + ' to ' + createPalletsTo + '?';
+	
+	if (confirm(confirmText) == true) {
+		
+		var query = 'mutation {';
+		
+		for (var j = createPalletsFrom; j <= createPalletsTo; j++) {
+			query += ' update' + j + ': create_item (board_id: ' + boardId_RadiatorPallet + ', group_id: "topics", item_name: "' + j + '") { id }'
+		}
+		
+		query += ' }';
+		
+		mondayAPI(query, function(data) {
+			getPallets();
+		});
 	}
 }
