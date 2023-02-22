@@ -50,10 +50,19 @@ function getPallets() {
 			let deliveryDate = delivery.deliveredDate;
 			let palletsDelivered = delivery.pallets;
 			
+			var dateCount = 0;
+			
+			for (var j = 0; j < palletsDelivered.length; j++) {
+				let palletDelivered = palletsDelivered[j];
+				
+				let palletRadiators = getColumnText(palletDelivered, columnId_RadiatorPallet_Radiators);
+				dateCount += ((palletRadiators == '') ? 0 : palletRadiators.split(',').length);
+			}
+			
 			html += '<li>';
 			html += '<a class="uk-accordion-title" href="#">';
 			html += '<h3>';
-			html += deliveryDate;
+			html += deliveryDate + ' [' + dateCount + ' rads]';
 			html += '</h3>';
 			html += '</a>';
 			html += '<div class="uk-accordion-content">';
