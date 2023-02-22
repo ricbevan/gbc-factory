@@ -73,6 +73,7 @@ function getPallets() {
 			for (var j = 0; j < palletsDelivered.length; j++) {
 				let palletDelivered = palletsDelivered[j];
 				
+				let palletId = palletDelivered.id;
 				let palletNumber = palletDelivered.name;
 				let palletRadiators = getColumnText(palletDelivered, columnId_RadiatorPallet_Radiators);
 				let palletDeliveredBy = getColumnText(palletDelivered, columnId_RadiatorPallet_DeliveredBy);
@@ -80,7 +81,7 @@ function getPallets() {
 				let palletRadiatorCountText = palletRadiatorCount + ' rad' + ((palletRadiatorCount == 1) ? '' : 's');
 				
 				html += '<li class="uk-flex uk-flex-middle">';
-				html += 'Pallet ' + palletNumber + ' [' + fixName(palletDeliveredBy) + '] ' + palletRadiatorCountText;
+				html += '<span>Pallet <a href="radiators-all-pallets.html#' + palletId + '">' + palletNumber + '</a> [' + fixName(palletDeliveredBy) + '] ' + palletRadiatorCountText + '</span>';
 				html += '</li>';
 			}
 			
