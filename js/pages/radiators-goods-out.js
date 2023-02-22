@@ -12,7 +12,7 @@ function getPallets() {
 		
 		let purchaseOrders = data['data']['items_by_column_values'];
 		
-		var html = '';
+		var html = '<option value=\"\" disabled hidden selected>pallet</option>';
 		
 		for (var i = 0; i < purchaseOrders.length; i++) {
 			let purchaseOrder = purchaseOrders[i];
@@ -36,7 +36,7 @@ function getRadiators() {
 	
 	let goodsOutPallet = gbc('#goods-out-pallet').val();
 	
-	let query = 'query { items_by_column_values (board_id: ' + boardId_Radiator + ', column_id: "' + columnId_Radiator_Status + '", column_value: "Received") { id name group { title } column_values(ids:["' + columnId_Radiator_PalletOutgoing + '","' + columnId_Radiator_Colour + '"]) { id text value } } }';
+	let query = 'query { items_by_column_values (board_id: ' + boardId_Radiator + ', column_id: "' + columnId_Radiator_Status + '", column_value: "Received") { id name group { title } column_values(ids:["' + columnId_Radiator_PalletOutgoing + '","' + columnId_Radiator_Colour + '", "' + columnId_Radiator_DispatchDate + '"]) { id text value } } }';
 	
 	mondayAPI(query, function(data) {
 		
@@ -63,7 +63,7 @@ function getRadiators() {
 		// sort array by pallet number
 		palletSummary.sort((a, b) => (a.palletNumber > b.palletNumber) ? 1 : -1);
 		
-		var html = '<ul uk-accordion>';
+		var html = '<ul uk-accordion="animation: false">';
 		
 		for (var i = 0; i < palletSummary.length; i++) {
 			let pallet = palletSummary[i];
@@ -111,6 +111,7 @@ function getRadiators() {
 				let radiatorColour = getColumnText(palletRadiator, columnId_Radiator_Colour);
 				let linkedPalletId = getColumnValue(palletRadiator, columnId_Radiator_PalletOutgoing);
 				let linkedPalletText = getColumnText(palletRadiator, columnId_Radiator_PalletOutgoing);
+				let linkedPalletDispatchDate = getColumnText(palletRadiator, columnId_Radiator_DispatchDate);
 				
 				if (linkedPalletId != null) { // if radiator is linked to a pallet
 					let assignedPalletId2 = JSON.parse(linkedPalletId);
@@ -122,7 +123,12 @@ function getRadiators() {
 							checkboxStatus = ' checked';
 						} else { // if the radiator is on a pallet, but not the selected pallet
 							checkboxStatus = ' disabled hidden';
-							checkboxAlreadyOnPallet = ' - on pallet <a href="radiators-all-pallets.html#' + assignedPalletId + '" target="_blank">' + linkedPalletText + '</a>';
+							
+							console.log(linkedPalletDispatchDate);
+							
+							let url = (linkedPalletDispatchDate == '' ? 'radiators-goods-out' : 'radiators-all-pallets');
+							
+							checkboxAlreadyOnPallet = ' - on pallet <a href="' + url + '.html#' + assignedPalletId + '" target="_blank">' + linkedPalletText + '</a>';
 						}
 					}
 				}
