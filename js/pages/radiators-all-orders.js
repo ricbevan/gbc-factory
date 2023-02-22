@@ -143,7 +143,7 @@ function getRadiators(radiatorIds) {
 				if (radiatorDispatchDate != "") {
 					html += 'Sent on pallet <a href="radiators-all-pallets.html#' + radiatorDispatchPalletId + '" target="_blank">' + radiatorDispatchPallet + '</a>, on  ' + fixDate(radiatorDispatchDate);
 				} else {
-					html += 'On pallet ' + radiatorDispatchPallet;
+					html += 'On pallet <a href="radiators-goods-out.html#' + radiatorDispatchPalletId + '" target="_blank">' + radiatorDispatchPallet + '</a>';
 				}
 			}
 			
