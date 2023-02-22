@@ -116,7 +116,7 @@ function getRadiators(radiatorIds) {
 			let radiatorStatus = getColumnText(radiator, columnId_Radiator_Status);
 			
 			html += '<li class="tag-' + alphanumeric(radiatorColour) + ' uk-flex uk-flex-middle">';
-			html += '<p class="uk-flex-1">';
+			html += '<p class="uk-flex-1 uk-margin-remove-bottom">';
 			html += '<span class="uk-text-bold">';
 			html += '[' + radiatorColour + '] ';
 			html += radiatorCode;
