@@ -17,7 +17,7 @@ function getPurchaseOrders() {
 			return false;
 		}
 		
-		var html = '';
+		var html = '<option value=\"\" disabled hidden selected>purchase order</option>';;
 		
 		for (var i = 0; i < purchaseOrders.length; i++) {
 			let purchaseOrder = purchaseOrders[i];
@@ -32,7 +32,7 @@ function getPurchaseOrders() {
 			getPurchaseOrder();
 		});
 		
-		getPurchaseOrder();
+		getHashOrder();
 	});
 }
 
@@ -65,7 +65,7 @@ function getPurchaseOrder() {
 
 function getRadiators(radiatorIds) {
 	
-	let query = ' { boards(ids:' + boardId_Radiator + ') { items(ids: [' + radiatorIds + ']) { id name column_values(ids:["' + columnId_Radiator_Colour + '","' + columnId_Radiator_PalletIncoming + '","' + columnId_Radiator_ReceivedDate + '","' + columnId_Radiator_PalletOutgoing + '","' + columnId_Radiator_DispatchDate + '","' + columnId_Radiator_Status + '"]) { text id } } } } ';
+	let query = ' { boards(ids:' + boardId_Radiator + ') { items(ids: [' + radiatorIds + ']) { id name column_values(ids:["' + columnId_Radiator_Colour + '","' + columnId_Radiator_PalletIncoming + '","' + columnId_Radiator_ReceivedDate + '","' + columnId_Radiator_PalletOutgoing + '","' + columnId_Radiator_DispatchDate + '","' + columnId_Radiator_Status + '"]) { text id value } } } } ';
 	
 	mondayAPI(query, function(data) {
 		
@@ -137,8 +137,11 @@ function getRadiators(radiatorIds) {
 			if (radiatorDispatchPallet == "") {
 				html += 'Not delivered yet';
 			} else {
+				let radiatorDispatchPalletData = getColumnValue(radiator, columnId_Radiator_PalletOutgoing);
+				let radiatorDispatchPalletId = JSON.parse(radiatorDispatchPalletData)['linkedPulseIds'][0]['linkedPulseId'];
+				
 				if (radiatorDispatchDate != "") {
-					html += 'Sent on pallet ' + radiatorDispatchPallet + ', on  ' + fixDate(radiatorDispatchDate);
+					html += 'Sent on pallet <a href="radiators-all-pallets.html#' + radiatorDispatchPalletId + '" target="_blank">' + radiatorDispatchPallet + '</a>, on  ' + fixDate(radiatorDispatchDate);
 				} else {
 					html += 'On pallet ' + radiatorDispatchPallet;
 				}
@@ -155,4 +158,13 @@ function getRadiators(radiatorIds) {
 		
 		gbc('#page').html(html).show();
 	});
+}
+
+function getHashOrder() {
+	if(window.location.hash) {
+		let hash = window.location.hash.substring(1);
+		
+		gbc('#purchase-order').val(hash);
+		getPurchaseOrder();
+	}
 }

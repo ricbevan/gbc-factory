@@ -45,6 +45,8 @@ function getPallets() {
 			getPallet();
 		});
 		
+		getHashPallet();
+		
 	});
 }
 
@@ -99,7 +101,7 @@ function getRadiatorsOnPallets(palletRadiatorIds) {
 				radiatorIdArr.push(radiatorId['linkedPulseId']);
 			}
 			
-			let query = ' { boards(ids:' + boardId_Radiator + ') { items(ids: [' + radiatorIdArr.join(',') + ']) { id name group { title } column_values(ids: ["' + columnId_Radiator_Colour + '", "' + columnId_Radiator_PalletIncoming + '", "' + columnId_Radiator_ReceivedDate + '", "' + columnId_Radiator_PalletOutgoing + '", "' + columnId_Radiator_DispatchDate + '", "' + columnId_Radiator_Status + '"]) {  text id } } } } ';
+			let query = ' { boards(ids:' + boardId_Radiator + ') { items(ids: [' + radiatorIdArr.join(',') + ']) { id name group { id title } column_values(ids: ["' + columnId_Radiator_Colour + '", "' + columnId_Radiator_PalletIncoming + '", "' + columnId_Radiator_ReceivedDate + '", "' + columnId_Radiator_PalletOutgoing + '", "' + columnId_Radiator_DispatchDate + '", "' + columnId_Radiator_Status + '"]) {  text id } } } } ';
 			
 			mondayAPI(query, function(data) {
 				
@@ -122,6 +124,7 @@ function getRadiatorsOnPallets(palletRadiatorIds) {
 					let radiatorDispatchPallet = getColumnText(radiator, columnId_Radiator_PalletOutgoing);
 					let radiatorDispatchDate = getColumnText(radiator, columnId_Radiator_DispatchDate);
 					let radiatorStatus = getColumnText(radiator, columnId_Radiator_Status);
+					let radiatorPurchaseId = radiator.group.id;
 					let radiatorPurchaseOrder = radiator.group.title;
 					
 					html += '<li class="uk-flex uk-flex-middle">';
@@ -132,7 +135,7 @@ function getRadiatorsOnPallets(palletRadiatorIds) {
 					html += '</span>';
 					html += '<br />'
 					html += '<span class="uk-text-light uk-text-small">';
-					html += 'From purchase order: ' + fixDate(radiatorPurchaseOrder);
+					html += 'From purchase order: <a href="radiators-all-orders.html#' + radiatorPurchaseId + '" target="_blank">' + fixDate(radiatorPurchaseOrder) + '</a>';
 					html += '</span>';
 					html += '<br />';
 					html += '<span class="uk-text-light uk-text-small">';
@@ -179,5 +182,14 @@ function addPallets() {
 		mondayAPI(query, function(data) {
 			getPallets();
 		});
+	}
+}
+
+function getHashPallet() {
+	if(window.location.hash) {
+		let hash = window.location.hash.substring(1);
+		
+		gbc('#pallet-number').val(hash);
+		getPallet();
 	}
 }

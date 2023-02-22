@@ -57,7 +57,9 @@ function getDates() {
 
 function getPallets() {
 	
-	let query = ' { items_by_column_values (board_id: ' + boardId_RadiatorPallet + ', column_id: "' + columnId_RadiatorPallet_Status + '", column_value: "At GBC") { id name } } ';
+	let query = ' { items_by_column_values (board_id: ' + boardId_RadiatorPallet + ', column_id: "' + columnId_RadiatorPallet_Status + '", column_value: "At GBC") { id name column_values(ids:["' + columnId_RadiatorPallet_Radiators + '"]) { id text } } } ';
+	
+	console.log(query);
 	
 	mondayAPI(query, function(data) {
 		
@@ -71,11 +73,14 @@ function getPallets() {
 			
 			let palletId = pallet.id;
 			let palletName = pallet.name;
+			let palletRadiators = getColumnText(pallet, columnId_RadiatorPallet_Radiators);
+			let palletRadiatorCount = ((palletRadiators == '') ? 0 : palletRadiators.split(',').length);
+			let palletRadiatorCountText = palletRadiatorCount + ' rad' + ((palletRadiatorCount == 1) ? '' : 's');
 			
 			html += '<li>';
 			html += '<label>';
 			html += '<input class="uk-checkbox" type="checkbox" id="' + palletId + '"> ';
-			html += 'Pallet ' + palletName;
+			html += 'Pallet <a href="radiators-goods-out.html#' + palletId + '" target="_blank">' + palletName + '</a> [' + palletRadiatorCountText + ']';
 			html += '</label>'
 			html += '</li>';
 		}

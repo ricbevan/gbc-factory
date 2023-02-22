@@ -25,9 +25,9 @@ function getPallets() {
 		
 		gbc('#goods-out-pallet').html(html).on('change', function(e) {
 			getRadiators();
-		});;
+		});
 		
-		getRadiators();
+		getHashPallet();
 		
 	});
 }
@@ -122,7 +122,7 @@ function getRadiators() {
 							checkboxStatus = ' checked';
 						} else { // if the radiator is on a pallet, but not the selected pallet
 							checkboxStatus = ' disabled hidden';
-							checkboxAlreadyOnPallet = ' - on pallet ' + linkedPalletText;
+							checkboxAlreadyOnPallet = ' - on pallet <a href="radiators-all-pallets.html#' + assignedPalletId + '" target="_blank">' + linkedPalletText + '</a>';
 						}
 					}
 				}
@@ -200,4 +200,13 @@ function saveRadiators() {
 	mondayAPI(query, function(data) {
 		UIkit.notification('Radiators saved', 'success');
 	});
+}
+
+function getHashPallet() {
+	if(window.location.hash) {
+		let hash = window.location.hash.substring(1);
+		
+		gbc('#goods-out-pallet').val(hash);
+		getRadiators();
+	}
 }
