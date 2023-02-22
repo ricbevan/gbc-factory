@@ -70,7 +70,7 @@ function getPallet() {
 		if (palletStatus == 'At GBC') {
 			html += 'Currently at GBC.';
 		} else {
-			html += 'Delivered by ' + palletDeliveredBy + ' on ' + fixDate(palletDate);
+			html += 'Delivered by ' + fixName(palletDeliveredBy) + ' on ' + fixDate(palletDate);
 		}
 		
 		html += '</p>';
@@ -132,7 +132,7 @@ function getRadiatorsOnPallets(palletRadiatorIds) {
 					html += '</span>';
 					html += '<br />'
 					html += '<span class="uk-text-light uk-text-small">';
-					html += 'From purchase order: ' + radiatorPurchaseOrder;
+					html += 'From purchase order: ' + fixDate(radiatorPurchaseOrder);
 					html += '</span>';
 					html += '<br />';
 					html += '<span class="uk-text-light uk-text-small">';
@@ -140,7 +140,7 @@ function getRadiatorsOnPallets(palletRadiatorIds) {
 					if (radiatorStatus == "Not Received") {
 						html += 'Not received yet';
 					} else {
-						html += 'Received on pallet ' + radiatorReceivedPallet + ', on ' + fixDate(radiatorReceivedDate) + '. PO ' + radiatorPurchaseOrder;
+						html += 'Received on pallet ' + radiatorReceivedPallet + ', on ' + fixDate(radiatorReceivedDate) + '.';
 					}
 					
 					html += '</span>';

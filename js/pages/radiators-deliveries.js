@@ -23,7 +23,7 @@ function getDrivers() {
 			
 			let driverId = JSON.parse(driverData)['personsAndTeams'][0]['id'];
 			
-			html += "<option value=\"" + driverId + "\">" + driverName + "</option>";
+			html += "<option value=\"" + driverId + "\">" + fixName(driverName) + "</option>";
 			
 			if (driverId == userId) {
 				selectedValue = driverId;

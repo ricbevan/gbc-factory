@@ -81,6 +81,16 @@ function fixDate(date) {
 	}
 }
 
+function fixName(name) {
+	var splitName = name.split(' ');
+	
+	if (splitName.length > 1) {
+		return splitName[0];
+	} else {
+		return name;
+	}
+}
+
 function getColumnRow(arr, column) {
 	let temp = findInArray(arr['column_values'], 'id', column);
 	return temp;
