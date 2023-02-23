@@ -40,127 +40,122 @@ function getRadiators() {
 	
 	mondayAPI(query, function(data) {
 		
-		var palletSummary = [];
-		
 		let radiators = data['data']['items_by_column_values'];
 		
-		// loop through radiators and add them to a summary array, grouped by pallet number
+		var colours = [];
+		var purchaseOrders = [];
+		
+		var html = '<div><div class="uk-card uk-card-secondary uk-card-body" id="selected-radiators"><h3 class="uk-card-title">Selected radiators</h3><ul class="uk-list"></ul></div></div>';
+		
+		html += '<div uk-filter="target: .radiator-filter">';
+		html += '<ul class="uk-subnav uk-subnav-divider uk-background-default uk-margin" uk-sticky>';
+		html += '<li class="uk-active" uk-filter-control><a href="#">All</a></li>';
+		
 		for (var i = 0; i < radiators.length; i++) {
 			let radiator = radiators[i];
 			
-			let palletNumber = fixDate(radiator.group.title.replace(' AM', '').replace(' PM', ''));
+			let radiatorColour = getColumnText(radiator, columnId_Radiator_Colour);
+			colours.push(radiatorColour);
 			
-			let palletSummaryPallet = findInArray(palletSummary, 'palletNumber', palletNumber);
-			let palletAlreadyInPalletSummary = (palletSummaryPallet == undefined);
-			
-			if (palletAlreadyInPalletSummary) {
-				palletSummary.push({ 'palletNumber': palletNumber, 'radiators': [radiator] })
-			} else {
-				palletSummaryPallet.radiators.push(radiator)
-			}
+			let purchaseOrder = fixDate(radiator.group.title.replace(' AM', '').replace(' PM', ''));
+			purchaseOrders.push(purchaseOrder);
 		}
 		
-		// sort array by pallet number
-		palletSummary.sort((a, b) => (a.palletNumber > b.palletNumber) ? 1 : -1);
+		colours = [... new Set(colours)].sort(); // get unique colours, sorted
+		purchaseOrders = [... new Set(purchaseOrders)].sort(); // get unique dates, sorted
 		
-		var html = '<ul uk-accordion="animation: false">';
+		if (purchaseOrders.length > 0) {
+			html += '<li><a href="#">PO<span uk-icon="icon: triangle-down"></span></a><div uk-dropdown="mode: click"><ul class="uk-nav uk-dropdown-nav">';
+			
+			for (var i = 0; i < purchaseOrders.length; i++) {
+				let purchaseOrder = purchaseOrders[i];
+				
+				html += '<li uk-filter-control="filter: [data-po=\'' + alphanumeric(purchaseOrder) + '\']; group: data-po"><a href="#">' + purchaseOrder + '</a></li>';
+			}
+			
+			html += '</ul></div></li>';
+		}
 		
-		for (var i = 0; i < palletSummary.length; i++) {
-			let pallet = palletSummary[i];
+		if (colours.length > 0) {
+			html += '<li><a href="#">Colour<span uk-icon="icon: triangle-down"></span></a><div uk-dropdown="mode: click"><ul class="uk-nav uk-dropdown-nav">';
 			
-			let palletNumber = pallet.palletNumber;
-			let palletRadiators = pallet.radiators;
-			
-			var incompleteRadiators = 0;
-			var incompleteRadiatorsText = '';
-			
-			for (var j = 0; j < palletRadiators.length; j++) {
-				let palletRadiator = palletRadiators[j];
+			for (var i = 0; i < colours.length; i++) {
+				let colour = colours[i];
 				
-				let linkedPalletText = getColumnText(palletRadiator, columnId_Radiator_PalletOutgoing);
-				
-				if (linkedPalletText == "") {
-					incompleteRadiators += 1;
-				}
+				html += '<li uk-filter-control="filter: [data-colour=\'' + alphanumeric(colour) + '\']; group: data-colour"><a href="#">' + colour + '</a></li>';
 			}
 			
-			if (incompleteRadiators > 0) {
-				incompleteRadiatorsText = ' [' + incompleteRadiators + ' remaining]';
-			}
-			
-			html += '<li>';
-			html += '<a class="uk-accordion-title" href="#">';
-			html += '<h3>';
-			html += palletNumber + incompleteRadiatorsText;
-			html += '</h3>';
-			html += '</a>';
-			html += '<div class="uk-accordion-content">';
-			html += '<ul class="uk-list uk-list-striped">';
-			
-			// sort radiators on pallet by colour, then number
-			palletRadiators.sort((a, b) => (
-				(getColumnText(a, columnId_Radiator_Colour) + a.name) > 
-				(getColumnText(b, columnId_Radiator_Colour) + b.name)) ? 1 : -1);
-			
-			for (var j = 0; j < palletRadiators.length; j++) {
-				let palletRadiator = palletRadiators[j];
-				
-				var checkboxStatus = '';
-				var checkboxAlreadyOnPallet = '';
-				
-				let radiatorColour = getColumnText(palletRadiator, columnId_Radiator_Colour);
-				let linkedPalletId = getColumnValue(palletRadiator, columnId_Radiator_PalletOutgoing);
-				let linkedPalletText = getColumnText(palletRadiator, columnId_Radiator_PalletOutgoing);
-				let linkedPalletDispatchDate = getColumnText(palletRadiator, columnId_Radiator_DispatchDate);
-				
-				if (linkedPalletId != null) { // if radiator is linked to a pallet
-					let assignedPalletId2 = JSON.parse(linkedPalletId);
-					
-					if (assignedPalletId2.hasOwnProperty('linkedPulseIds')) {
-						let assignedPalletId = assignedPalletId2['linkedPulseIds'][0]['linkedPulseId'];
-						
-						if (assignedPalletId == goodsOutPallet) { // if the radiator is on the selected pallet
-							checkboxStatus = ' checked';
-						} else { // if the radiator is on a pallet, but not the selected pallet
-							checkboxStatus = ' disabled hidden';
-							
-							console.log(linkedPalletDispatchDate);
-							
-							let url = (linkedPalletDispatchDate == '' ? 'radiators-goods-out' : 'radiators-all-pallets');
-							
-							checkboxAlreadyOnPallet = ' - on pallet <a href="' + url + '.html#' + assignedPalletId + '" target="_blank">' + linkedPalletText + '</a>';
-						}
-					}
-				}
-				
-				html += '<li class="uk-flex uk-flex-middle">';
-				html += '<label class="uk-flex-1">';
-				html += '<input class="uk-checkbox" type="checkbox" id="' + palletRadiator.id + '" data-name="' + palletNumber + ' [' + radiatorColour + '] ' + palletRadiator.name + '" data-changed="false"' + checkboxStatus + '> ';
-				html += '[' + radiatorColour + '] ' + palletRadiator.name + checkboxAlreadyOnPallet;
-				html += '</label>'
-				html += '<span uk-icon="icon: info;" class="uk-flex-none" uk-tooltip="title: ' + palletRadiator.id + '; pos: left"></span>'
-				html += '</li>';
-			}
-				
-			html += '</ul>';
-			html += '</div>';
-			html += '</li>';
+			html += '</ul></div></li>';
 		}
 		
 		html += '</ul>';
 		
-		html += '<div><div class="uk-card uk-card-secondary uk-card-body" id="selected-radiators"><h3 class="uk-card-title">Selected radiators</h3><ul class="uk-list"></ul></div></div>';
-		html += '<div><button class="uk-button uk-button-primary uk-width-1-1" id="goods-out-save">Save</button></div>';
+		radiators.sort((a, b) => (
+		(a.group.title.replace(' AM', '').replace(' PM', '') + ' ' + getColumnText(a, columnId_Radiator_Colour) + ' ' + a.name) > 
+		(b.group.title.replace(' AM', '').replace(' PM', '') + ' ' + getColumnText(b, columnId_Radiator_Colour) + ' ' + b.name)) ? 1 : -1);
+		
+		html += '<ul class="uk-list uk-list-divider radiator-filter">';
+		
+		for (var i = 0; i < radiators.length; i++) {
+			let radiator = radiators[i];
+			
+			var checkboxStatus = '';
+			var checkboxAlreadyOnPallet = '';
+			
+			let radiatorId = radiator.id;
+			let radiatorName = radiator.name;
+			let radiatorPurchaseOrder = fixDate(radiator.group.title.replace(' AM', '').replace(' PM', ''));
+			let radiatorColour = getColumnText(radiator, columnId_Radiator_Colour);
+			let linkedPalletId = getColumnValue(radiator, columnId_Radiator_PalletOutgoing);
+			let linkedPalletText = getColumnText(radiator, columnId_Radiator_PalletOutgoing);
+			let linkedPalletDispatchDate = getColumnText(radiator, columnId_Radiator_DispatchDate);
+			
+			if (linkedPalletId != null) { // if radiator is linked to a pallet
+				let assignedPalletId2 = JSON.parse(linkedPalletId);
+				
+				if (assignedPalletId2.hasOwnProperty('linkedPulseIds')) {
+					let assignedPalletId = assignedPalletId2['linkedPulseIds'][0]['linkedPulseId'];
+					
+					if (assignedPalletId == goodsOutPallet) { // if the radiator is on the selected pallet
+						checkboxStatus = ' checked';
+					} else { // if the radiator is on a pallet, but not the selected pallet
+						checkboxStatus = ' disabled hidden';
+						
+						var palletLink = '';
+						
+						if (linkedPalletDispatchDate == '') {
+							palletLink = '<span class="get-pallet" data-radiator="' + assignedPalletId + '">' + linkedPalletText + '</span>';
+						} else {
+							palletLink = '<a href="radiators-all-pallets.html#' + assignedPalletId + '">' + linkedPalletText + '</a>';
+						}
+						
+						checkboxAlreadyOnPallet = ' - on pallet ' + palletLink;
+					}
+				}
+			}
+			
+			html += '<li class="uk-flex uk-flex-middle" data-colour="' + alphanumeric(radiatorColour) + '" data-po="' + alphanumeric(radiatorPurchaseOrder) + '">';
+			html += '<label class="uk-flex-1">';
+			html += '<input class="uk-checkbox" type="checkbox" id="' + radiatorId + '" data-name="' + linkedPalletText + ' [' + radiatorColour + '] ' + radiatorName + '" data-changed="false"' + checkboxStatus + '> ';
+			html += '[' + radiatorColour + '] ' + radiatorName + checkboxAlreadyOnPallet + ' <span class="uk-text-nowrap uk-text-muted">' + radiatorPurchaseOrder + '</span>';
+			html += '</label>'
+			html += '<span uk-icon="icon: info;" class="uk-flex-none uk-margin-small-left" uk-tooltip="title: ' + radiatorId + '; pos: left"></span>'
+			html += '</li>';
+		}
+		
+		html += '</ul>';
+		html += '</div>';
 		
 		gbc('#page').html(html).show();
 		
-		gbc('#goods-out-save').on('click', function(e) {
-			saveRadiators();
+		gbc('.get-pallet').on('click', function(e) {
+			let radiatorId = e.target.dataset.radiator;
+			gbc('#goods-out-pallet').val(radiatorId);
+			getRadiators();
 		});
 		
-		gbc('#page ul input[type="checkbox"]').on('click', function(e) {
-			e.target.dataset.changed = "true";
-			getSelectedRadiators();
+		gbc('#page ul input[type="checkbox"]').on('change', function(e) {
+			saveRadiator(e);
 		});
 		
 		getSelectedRadiators();
@@ -182,29 +177,26 @@ function getSelectedRadiators() {
 	gbc('#selected-radiators ul').html(html);
 }
 
-function saveRadiators() {
+function saveRadiator(radiatorCheckbox) {
+	
+	let radiator = radiatorCheckbox.target;
+	
+	let radiatorId = radiator.id;
+	let radiatorChecked = radiator.checked;
 	
 	let goodsOutPallet = gbc('#goods-out-pallet').val();
 	
-	var query = 'mutation {';
+	var radiatorPalletId = JSON.stringify('{"' + columnId_Radiator_PalletOutgoing + '" : {"item_ids": [' + goodsOutPallet + ']} }');
 	
-	gbc('#page ul input[type=checkbox][data-changed="true"]').each(function(radiator) {
-		let radiatorId = radiator.id;
-		let radiatorChecked = radiator.checked;
-		
-		var radiatorPalletId = JSON.stringify('{"' + columnId_Radiator_PalletOutgoing + '" : {"item_ids": [' + goodsOutPallet + ']} }');
-		
-		if (!radiatorChecked) {
-			radiatorPalletId = JSON.stringify('{"' + columnId_Radiator_PalletOutgoing + '" : {} }');
-		}
-		
-		query += ' update' + radiatorId + ': change_multiple_column_values(item_id: ' + radiatorId + ', board_id: ' + boardId_Radiator + ', column_values: ' + radiatorPalletId + ') { id }';
-	});
+	if (!radiatorChecked) {
+		radiatorPalletId = JSON.stringify('{"' + columnId_Radiator_PalletOutgoing + '" : {} }');
+	}
 	
-	query += ' }';
+	let query = ' mutation { change_multiple_column_values(item_id: ' + radiatorId + ', board_id: ' + boardId_Radiator + ', column_values: ' + radiatorPalletId + ') { id } } ';
 	
 	mondayAPI(query, function(data) {
 		UIkit.notification('Radiators saved', 'success');
+		getSelectedRadiators();
 	});
 }
 
