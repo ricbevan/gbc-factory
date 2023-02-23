@@ -141,9 +141,9 @@ function getRadiators(radiatorIds) {
 				let radiatorDispatchPalletId = JSON.parse(radiatorDispatchPalletData)['linkedPulseIds'][0]['linkedPulseId'];
 				
 				if (radiatorDispatchDate != "") {
-					html += 'Sent on pallet <a href="radiators-all-pallets.html#' + radiatorDispatchPalletId + '" target="_blank">' + radiatorDispatchPallet + '</a>, on  ' + fixDate(radiatorDispatchDate);
+					html += 'Sent on pallet <a href="radiators-all-pallets.html#' + radiatorDispatchPalletId + '">' + radiatorDispatchPallet + '</a>, on  ' + fixDate(radiatorDispatchDate);
 				} else {
-					html += 'On pallet <a href="radiators-goods-out.html#' + radiatorDispatchPalletId + '" target="_blank">' + radiatorDispatchPallet + '</a>';
+					html += 'On pallet <a href="radiators-goods-out.html#' + radiatorDispatchPalletId + '">' + radiatorDispatchPallet + '</a>';
 				}
 			}
 			

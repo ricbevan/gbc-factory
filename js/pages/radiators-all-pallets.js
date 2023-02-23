@@ -135,7 +135,7 @@ function getRadiatorsOnPallets(palletRadiatorIds) {
 					html += '</span>';
 					html += '<br />'
 					html += '<span class="uk-text-light uk-text-small">';
-					html += 'From purchase order: <a href="radiators-all-orders.html#' + radiatorPurchaseId + '" target="_blank">' + fixDate(radiatorPurchaseOrder) + '</a>';
+					html += 'From purchase order: <a href="radiators-all-orders.html#' + radiatorPurchaseId + '">' + fixDate(radiatorPurchaseOrder) + '</a>';
 					html += '</span>';
 					html += '<br />';
 					html += '<span class="uk-text-light uk-text-small">';

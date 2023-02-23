@@ -78,7 +78,7 @@ function getPallets() {
 			html += '<li>';
 			html += '<label>';
 			html += '<input class="uk-checkbox" type="checkbox" id="' + palletId + '"> ';
-			html += 'Pallet <a href="radiators-goods-out.html#' + palletId + '" target="_blank">' + palletName + '</a> [' + palletRadiatorCountText + ']';
+			html += 'Pallet <a href="radiators-goods-out.html#' + palletId + '">' + palletName + '</a> [' + palletRadiatorCountText + ']';
 			html += '</label>'
 			html += '</li>';
 		}
