@@ -59,8 +59,6 @@ function getPallets() {
 	
 	let query = ' { items_by_column_values (board_id: ' + boardId_RadiatorPallet + ', column_id: "' + columnId_RadiatorPallet_Status + '", column_value: "At GBC") { id name column_values(ids:["' + columnId_RadiatorPallet_Radiators + '"]) { id text } } } ';
 	
-	console.log(query);
-	
 	mondayAPI(query, function(data) {
 		
 		let pallets = data['data']['items_by_column_values'];
