@@ -13,7 +13,6 @@ input[type="number"]::-webkit-outer-spin-button {
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
-    font-style: italic;
   }
 }
 
@@ -26,6 +25,12 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 .uk-icon-button * {
   color: #000 !important;
+}
+
+.uk-sticky-fixed { /* sticky subnav on goods out */
+  margin-left: -41px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
 }
 
 .gbc-box-link {
