@@ -17,7 +17,7 @@ function getPurchaseOrders() {
 			return false;
 		}
 		
-		var html = '<option value=\"\" disabled hidden selected>purchase order</option>';
+		var html = '<option value=\"\" disabled hidden selected>Purchase Order</option>';
 		
 		for (var i = 0; i < purchaseOrders.length; i++) {
 			let purchaseOrder = purchaseOrders[i];

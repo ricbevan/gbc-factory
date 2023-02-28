@@ -12,7 +12,7 @@ function getPallets() {
 		
 		let purchaseOrders = data['data']['items_by_column_values'];
 		
-		var html = '<option value=\"\" disabled hidden selected>pallet</option>';
+		var html = '<option value=\"\" disabled hidden selected>Pallet</option>';
 		
 		for (var i = 0; i < purchaseOrders.length; i++) {
 			let purchaseOrder = purchaseOrders[i];
