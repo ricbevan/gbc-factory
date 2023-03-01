@@ -124,7 +124,7 @@ function getRadiators(radiatorIds) {
 			html += '<br />';
 			html += '<span class="uk-text-light uk-text-small">';
 			
-			if (radiatorStatus == "At Limitless") {
+			if (radiatorStatus == "Not Received") {
 				html += 'Not received yet';
 			} else {
 				html += 'Received on pallet ' + radiatorReceivedPallet + ', on ' + fixDate(radiatorReceivedDate);
