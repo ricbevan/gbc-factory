@@ -82,7 +82,7 @@ function getForkLiftChecks() {
 				}
 			}
 			
-			htmlDropDown += "<option value=\"" + forkLiftId + "\" data-id=\"" + check.id + "\">" + check.name + "</option>";
+			htmlDropDown += "<option value=\"" + forkLiftId + "\" data-id=\"" + check.id + "\">" + fixNameWithBracket(check.name) + "</option>";
 		}
 		
 		gbc('#fork-lift-check-fork-lift').html(htmlDropDown);

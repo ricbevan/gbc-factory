@@ -90,7 +90,7 @@ function getVehicleChecks() {
 				}
 			}
 			
-			htmlDropDown += "<option value=\"" + vehicleId + "\" data-id=\"" + check.id + "\">" + check.name + "</option>";
+			htmlDropDown += "<option value=\"" + vehicleId + "\" data-id=\"" + check.id + "\">" + fixNameWithBracket(check.name) + "</option>";
 		}
 		
 		htmlCheckBoxes += '<div class="uk-width-1-1"><p>* refer to vehicle and trailer combinations</div>';
