@@ -120,11 +120,13 @@ function getRadiators(purchaseOrderRadiatorIds) {
 				let radiatorId = radiator.id;
 				let radiatorName = radiator.name;
 				let radiatorColour = getColumnText(radiator, columnId_Radiator_Colour);
-				let radiatorReceived = ((getColumnText(radiator, columnId_Radiator_Status) == 'Received') ? ' checked' : '');
+				let radiatorStatus = getColumnText(radiator, columnId_Radiator_Status);
+				let radiatorReceived = (((radiatorStatus == 'Received') || (radiatorStatus == 'Invoiced')) ? ' checked' : '');
+				let checkboxStatus = ((radiatorStatus == 'Invoiced') ? ' disabled' : '');
 				
 				html += '<li class="uk-flex uk-flex-middle">';
 				html += '<label class="uk-flex-1">';
-				html += '<input class="uk-checkbox" type="checkbox" id="' + radiatorId + '" data-changed="false"' + radiatorReceived + '> ';
+				html += '<input class="uk-checkbox" type="checkbox" id="' + radiatorId + '" data-changed="false"' + radiatorReceived + checkboxStatus + '> ';
 				html += '[' + radiatorColour + '] ' + radiatorName;
 				html += '</label>';
 				html += '<span uk-icon="info" class="uk-flex-none gbc-radiator-info gbc-box-link" data-radiatorId="' + radiatorId + '"></span>';
