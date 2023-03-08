@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>NCCC Checks</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/uikit.min.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<script src="js/uikit.min.js"></script>
+		<script src="js/uikit-icons.min.js"></script>
+	</head>
+	<body uk-height-viewport>
+		<div class="uk-section gbc-yellow">
+			<div class="uk-container">
+				<div class="uk-position-top-right uk-padding-small" uk-tooltip="title: Not logged in; pos: bottom" id="username"><span uk-icon="user" class="uk-icon-button"></span></div>
+				<h1 class="uk-text-large">NCCC Checks</h1>
+			</div>
+		</div>
+		<div class="uk-section uk-section-default">
+			<div class="uk-container">
+				<ul class="uk-breadcrumb">
+					<li><a href="index.html">Home</a></li>
+					<li><a href="checks.html">Checks</a></li>
+					<li><span>NCCC Checks</span></li>
+				</ul>
+				<div class="uk-child-width-1-1 uk-grid-small" id="page" uk-grid>
+					<div>
+						<select class="uk-select" id="nccc-check-date"></select>
+					</div>
+				</div>
+				<div class="uk-margin-top" id="checks-loaded" hidden>
+					<div class="uk-child-width-1-1 uk-grid-small uk-form-horizontal" uk-grid>
+						<div>
+							<label class="uk-form-label" for="tank-1-temperature"><span class="uk-text-bold">Tank 1</span> temperature</label>
+							<div class="uk-form-controls">
+								<input class="uk-input" id="tank-1-temperature" type="number" placeholder="0" step="1"> 
+							</div>
+						</div>
+						<div>
+							<label class="uk-form-label" for="tank-1-solution"><span class="uk-text-bold">Tank 1</span> solution</label>
+							<div class="uk-form-controls">
+								<input class="uk-input" id="tank-1-solution" type="number" placeholder="0.0" step="0.1">
+							</div>
+						</div>
+						<div>
+							<label class="uk-form-label" for="tank-2-contamination"><span class="uk-text-bold">Tank 2</span> contamination</label>
+							<div class="uk-form-controls">
+								<input class="uk-input" id="tank-2-contamination" type="number" placeholder="0.0" step="0.1">
+							</div>
+						</div>
+						<div>
+							<label class="uk-form-label" for="tank-3-contamination"><span class="uk-text-bold">Tank 3</span> contamination</label>
+							<div class="uk-form-controls">
+								<input class="uk-input" id="tank-3-contamination" type="number" placeholder="0.0" step="0.1">
+							</div>
+						</div>
+						<div>
+							<label class="uk-form-label" for="tank-4-temperature"><span class="uk-text-bold">Tank 4</span> temperature</label>
+							<div class="uk-form-controls">
+								<input class="uk-input" id="tank-4-temperature" type="number" placeholder="0" step="1">
+							</div>
+						</div>
+						<div>
+							<label class="uk-form-label" for="tank-4-solution"><span class="uk-text-bold">Tank 4</span> solution</label>
+							<div class="uk-form-controls">
+								<input class="uk-input" id="tank-4-solution" type="number" placeholder="0.0" step="0.1">
+							</div>
+						</div>
+						<div>
+							<label class="uk-form-label" for="metaclean-added"><span class="uk-text-bold">Metaclean</span> added</label>
+							<div class="uk-form-controls">
+								<input class="uk-input" id="metaclean-added" type="number" placeholder="0" step="1">
+							</div>
+						</div>
+						<div>
+							<label class="uk-form-label" for="phosguard-added"><span class="uk-text-bold">Phosguard</span> added</label>
+							<div class="uk-form-controls">
+								<input class="uk-input" id="phosguard-added" type="number" placeholder="0" step="1">
+							</div>
+						</div>
+						<div>
+							<button id="save-nccc-checks" class="uk-button uk-button-primary">Save</button>
+						</div>
+					</div>
+				</div>
+				<div class="uk-alert-danger" id="error" uk-alert hidden>
+					<p></p>
+				</div>
+			</div>
+			
+			<div class="uk-modal uk-flex uk-open uk-flex-center uk-overlay-primary uk-text-center uk-flex-middle" id="loading" hidden>
+				<div class="uk-child-width-1-1" uk-grid>
+					<div id="loading-spinner">
+						<span uk-spinner="ratio: 4.5"></span>
+					</div>
+					<div>
+						<p id="loading-message">Loading...</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/gbc.js"></script>
+		<script src="js/gbc-office.js"></script>
+		<script src="js/monday.js"></script>
+		<script src="js/pages/checks-nccc.js"></script>
+		<script defer data-domain="factory.gbc.uk" src="https://stats.gbc.uk/js/index.js"></script>
+	</body>
+</html>
