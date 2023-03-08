@@ -104,7 +104,9 @@ function getForkLiftChecks() {
 			saveForkLiftChecks();
 		});
 		
-		gbc('#checks-loaded').show();
+		if (getLocalStorage('last-selected-fork-lift') != undefined) {
+			gbc('#checks-loaded').show();
+		}
 	});
 }
 
