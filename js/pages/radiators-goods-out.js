@@ -47,7 +47,7 @@ function getRadiators() {
 		
 		var html = '<div><div class="uk-card uk-card-secondary uk-card-body" id="selected-radiators"><h3 class="uk-card-title">Selected radiators</h3><ul class="uk-list"></ul></div></div>';
 		
-		html += '<div uk-filter="target: .radiator-filter">';
+		html += '<div uk-filter="target: .radiator-filter; animation: false;">';
 		html += '<ul class="uk-subnav uk-subnav-divider uk-background-default uk-margin" uk-sticky>';
 		html += '<li class="uk-active" uk-filter-control><a href="#">All</a></li>';
 		
@@ -65,7 +65,7 @@ function getRadiators() {
 		purchaseOrders = [... new Set(purchaseOrders)].sort(); // get unique dates, sorted
 		
 		if (purchaseOrders.length > 0) {
-			html += '<li><a href="#">PO<span uk-icon="icon: triangle-down"></span></a><div uk-dropdown="mode: click"><ul class="uk-nav uk-dropdown-nav">';
+			html += '<li><a href="#">PO<span uk-icon="icon: triangle-down"></span></a><div uk-dropdown="mode: click" class="gbc-filter"><ul class="uk-nav uk-dropdown-nav">';
 			
 			for (var i = 0; i < purchaseOrders.length; i++) {
 				let purchaseOrder = purchaseOrders[i];
@@ -77,7 +77,7 @@ function getRadiators() {
 		}
 		
 		if (colours.length > 0) {
-			html += '<li><a href="#">Colour<span uk-icon="icon: triangle-down"></span></a><div uk-dropdown="mode: click"><ul class="uk-nav uk-dropdown-nav">';
+			html += '<li><a href="#">Colour<span uk-icon="icon: triangle-down"></span></a><div uk-dropdown="mode: click" class="gbc-filter"><ul class="uk-nav uk-dropdown-nav">';
 			
 			for (var i = 0; i < colours.length; i++) {
 				let colour = colours[i];
@@ -147,6 +147,10 @@ function getRadiators() {
 		html += '</div>';
 		
 		gbc('#page').html(html).show();
+		
+		gbc('.gbc-filter ul li a').on('click', function(button) { // close the filter menu when clicked on
+			button.target.closest('.gbc-filter').classList.remove('uk-open');
+		});
 		
 		gbc('.get-pallet').on('click', function(e) {
 			let radiatorId = e.target.dataset.radiator;
