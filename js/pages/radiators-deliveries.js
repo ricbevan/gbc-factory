@@ -117,6 +117,8 @@ function saveDelivery() {
 			var updates = JSON.stringify('{"' + columnId_RadiatorPallet_Status + '" : "Dispatched", "' + columnId_RadiatorPallet_DispatchedDate + '": {"date" : "' + deliveryDate + '"}, "' + columnId_RadiatorPallet_DeliveredBy + '": { "personsAndTeams" : [ { "id": ' + deliveryDriver + ', "kind" : "person" } ] } }');
 			
 			query += ' update' + palletId + ': change_multiple_column_values(item_id: ' + palletId + ', board_id: ' + boardId_RadiatorPallet + ', column_values: ' + updates + ') { id }';
+			
+			markPalletRadiatorsDispatched(palletId);
 		}
 		
 		query += ' }';
@@ -126,4 +128,44 @@ function saveDelivery() {
 			getPallets();
 		});
 	}
+}
+
+function markPalletRadiatorsDispatched(palletId) {
+	
+	let query = ' { boards(ids:' + boardId_RadiatorPallet + ') { items(ids:' + palletId + ') { column_values(ids:["' + columnId_RadiatorPallet_Radiators + '"]) { id value } } } } ';
+	
+	mondayAPI(query, function(data) {
+		let pallet = data['data']['boards'][0]['items'][0];
+		
+		let palletRadiatorIds = getColumnValue(pallet, columnId_RadiatorPallet_Radiators);
+		
+		var radiatorIds = JSON.parse(palletRadiatorIds);
+		
+		if ('linkedPulseIds' in radiatorIds) {
+		
+			radiatorIds = radiatorIds['linkedPulseIds'];
+			
+			radiatorIdArr = [];
+			
+			for (var i = 0; i < radiatorIds.length; i++) {
+				var radiatorId = radiatorIds[i];
+				radiatorId = radiatorId['linkedPulseId'];
+				
+				let updates = JSON.stringify('{"' + columnId_Radiator_Status + '" : "Dispatched" }');
+				let query = ' update' + radiatorId + 'Rads: change_multiple_column_values(item_id: ' + radiatorId + ', board_id: ' + boardId_Radiator + ', column_values: ' + updates + ') { id } ';
+				
+				radiatorIdArr.push(query);
+			}
+			
+			palletRadiatorUpdate = radiatorIdArr;
+		}
+		
+		var query2 = 'mutation {';
+		query2 += palletRadiatorUpdate.join(' ');
+		query2 += ' } ';
+		
+		mondayAPI(query2, function(data) {
+			
+		});
+	});
 }
