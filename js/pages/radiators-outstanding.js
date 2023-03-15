@@ -10,13 +10,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getRadiators() {
 	
-	let query = 'query { items_by_column_values (board_id: ' + boardId_Radiator + ', column_id: "' + columnId_Radiator_Status + '", column_value: "Received") { id name group { title } column_values(ids:["' + columnId_Radiator_Colour + '"]) { id text } } }';
+	let query = 'query { items_by_multiple_column_values (board_id: ' + boardId_Radiator + ', column_id: "' + columnId_Radiator_Status + '", column_values: ["Not Received", "Received"]) { id name group { title } column_values(ids:["' + columnId_Radiator_Colour + '"]) { id text } } }';
 	
 	mondayAPI(query, function(data) {
 		
 		var poSummary = [];
 		
-		let radiators = data['data']['items_by_column_values'];
+		let radiators = data['data']['items_by_multiple_column_values'];
 		
 		// loop through radiators and add them to a summary array, grouped by pallet number
 		for (var i = 0; i < radiators.length; i++) {
@@ -28,9 +28,9 @@ function getRadiators() {
 			let poAlreadyInPoSummary = (poSummaryPo == undefined);
 			
 			if (poAlreadyInPoSummary) {
-				poSummary.push({ 'purchaseOrder': radiatorPo, 'radiators': [radiator] })
+				poSummary.push({ 'purchaseOrder': radiatorPo, 'radiators': [radiator] });
 			} else {
-				poSummaryPo.radiators.push(radiator)
+				poSummaryPo.radiators.push(radiator);
 			}
 		}
 		
