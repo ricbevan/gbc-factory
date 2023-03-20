@@ -76,7 +76,7 @@ function getStockItems() {
 				html += '<div>';
 				html += '<label class="uk-form-label" for="stock-' + stockItemId + '">' + stockItemName + '</label>';
 				html += '<div class="uk-form-controls">';
-				html += '<input class="uk-input" id="stock-' + stockItemId + '" type="number" placeholder="0" step="1" value="' + stockItemCount + '">';
+				html += '<input class="uk-input" id="stock-' + stockItemId + '" type="number" inputmode="numeric" placeholder="0" step="1" value="' + stockItemCount + '">';
 				html += '</div>';
 				html += '</div>';
 			}
