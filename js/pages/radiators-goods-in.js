@@ -121,8 +121,8 @@ function getRadiators(purchaseOrderRadiatorIds) {
 				let radiatorName = radiator.name;
 				let radiatorColour = getColumnText(radiator, columnId_Radiator_Colour);
 				let radiatorStatus = getColumnText(radiator, columnId_Radiator_Status);
-				let radiatorReceived = (((radiatorStatus == 'Received') || (radiatorStatus == 'Invoiced')) ? ' checked' : '');
-				let checkboxStatus = ((radiatorStatus == 'Invoiced') ? ' disabled' : '');
+				let radiatorReceived = (((radiatorStatus == 'Received') || (radiatorStatus == 'Invoiced') || (radiatorStatus == 'Dispatched')) ? ' checked' : '');
+				let checkboxStatus = (((radiatorStatus == 'Invoiced') || (radiatorStatus == 'Dispatched')) ? ' disabled' : '');
 				
 				html += '<li class="uk-flex uk-flex-middle">';
 				html += '<label class="uk-flex-1">';
