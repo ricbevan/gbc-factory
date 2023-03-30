@@ -50,6 +50,7 @@ function loadJob(jobNumber) {
 		jobId = job.id;
 		
 		gbc('#job-roles').attr('hidden', true);
+		gbc('#colour-and-manufacturer').val('');
 		
 		let jobColumns = job['column_values'];
 		
@@ -145,7 +146,7 @@ function updateJob(roleButton) {
 }
 
 function savePowder() {
-	let powder = document.querySelectorAll('#colour-and-manufacturer')[0].value;
+	let powder = gbc('#colour-and-manufacturer').val();
 	
 	if (powder == '') {
 		UIkit.notification('Please enter the colour and manufacturer', 'warning');
@@ -162,7 +163,6 @@ function savePowder() {
 				loadJob(jobNumber);
 			});
 			
-			console.log(data);
 			UIkit.notification('Colour and manufacturer saved', 'success');
 		});
 	}
