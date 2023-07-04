@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getPallets() {
 	
-	let query = ' { boards (ids: ' + boardId_RadiatorPallet + ') { items { id name column_values(ids:["' + columnId_RadiatorPallet_Status + '", "' + columnId_RadiatorPallet_Radiators + '"]) { id text } } } } ';
+	let query = ' { boards (ids: ' + boardId_RadiatorPallet + ') { items { id name } } } ';
 	
 	mondayAPI(query, function(data) {
 		
@@ -28,13 +28,9 @@ function getPallets() {
 			
 			let palletId = pallet.id;
 			let palletName = pallet.name;
-			let palletStatus = getColumnText(pallet, columnId_RadiatorPallet_Status);
-			let palletRadiators = getColumnText(pallet, columnId_RadiatorPallet_Radiators);
-			let palletRadiatorCount = ((palletRadiators == '') ? 0 : palletRadiators.split(',').length);
-			let palletRadiatorCountText = palletRadiatorCount + ' rad' + ((palletRadiatorCount == 1) ? '' : 's');
 			
 			if (palletName != "0") {
-				html += '<option value="' + palletId + '">Pallet ' + palletName + ' [' + palletStatus + '] ' + palletRadiatorCountText + '</option>';
+				html += '<option value="' + palletId + '">Pallet ' + palletName + '</option>';
 				maxPalletNumber = (parseInt(maxPalletNumber) < parseInt(palletName) ? parseInt(palletName) : maxPalletNumber); // get max radiator number
 			}
 		}
@@ -49,6 +45,46 @@ function getPallets() {
 		
 	});
 }
+
+// function getPallets() {
+// 	
+// 	let query = ' { boards (ids: ' + boardId_RadiatorPallet + ') { items { id name column_values(ids:["' + columnId_RadiatorPallet_Status + '", "' + columnId_RadiatorPallet_Radiators + '"]) { id text } } } } ';
+// 	
+// 	mondayAPI(query, function(data) {
+// 		
+// 		let pallets = data['data']['boards'][0]['items'];
+// 		
+// 		// sort pallets by pallet number
+// 		pallets.sort((a, b) => (parseInt(a.name) < parseInt(b.name)) ? 1 : -1);
+// 		
+// 		var html = '<option value=\"\" disabled hidden selected>Pallet</option>';
+// 		
+// 		for (var i = 0; i < pallets.length; i++) {
+// 			let pallet = pallets[i];
+// 			
+// 			let palletId = pallet.id;
+// 			let palletName = pallet.name;
+// 			let palletStatus = getColumnText(pallet, columnId_RadiatorPallet_Status);
+// 			let palletRadiators = getColumnText(pallet, columnId_RadiatorPallet_Radiators);
+// 			let palletRadiatorCount = ((palletRadiators == '') ? 0 : palletRadiators.split(',').length);
+// 			let palletRadiatorCountText = palletRadiatorCount + ' rad' + ((palletRadiatorCount == 1) ? '' : 's');
+// 			
+// 			if (palletName != "0") {
+// 				html += '<option value="' + palletId + '">Pallet ' + palletName + ' [' + palletStatus + '] ' + palletRadiatorCountText + '</option>';
+// 				maxPalletNumber = (parseInt(maxPalletNumber) < parseInt(palletName) ? parseInt(palletName) : maxPalletNumber); // get max radiator number
+// 			}
+// 		}
+// 		
+// 		gbc('#pallet-number').html(html);
+// 		
+// 		gbc('#pallet-number').on('change', function(e) {
+// 			getPallet();
+// 		});
+// 		
+// 		getHashPallet();
+// 		
+// 	});
+// }
 
 function getPallet() {
 	
