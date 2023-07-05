@@ -3,96 +3,113 @@ var html = '';
 var maxPalletNumber = 0;
 
 document.addEventListener("DOMContentLoaded", function() {
-	getPallets();
-	
-	gbc('#add-pallets').on('click', function() {
-		addPallets();
-	});
+	getDeliveries();
 });
 
-function getPallets() {
+function getDeliveries() {
+
+  let query = ' { boards(ids:4206918313) { items { id name column_values(ids:["date6","signature"]) { id text } } } } ';
+  
+  mondayAPI(query, function(data) {
+	var deliveries = data['data']['boards'][0]['items'];
 	
-	let query = ' { boards (ids: ' + boardId_RadiatorPallet + ') { items { id name column_values(ids:["' + columnId_RadiatorPallet_DeliveredBy + '", "' + columnId_RadiatorPallet_Radiators + '", "' + columnId_RadiatorPallet_DispatchedDate + '"]) { id text } } } } ';
+	deliveries.sort((a, b) => (
+	(getColumnText(a, 'date6') + a.name) <
+	(getColumnText(b, 'date6') + b.name)) ? 1 : -1);
 	
-	mondayAPI(query, function(data) {
+	var html = '<option value=\"\" disabled hidden selected>Delivery</option>';
+	
+	for (var i = 0; i < deliveries.length; i++) {
+	  let delivery = deliveries[i];
+	  let deliveryDate = getColumnText(delivery, 'date6');
+	  
+	  var deliveryDateDate = new Date(deliveryDate);
+	  var todayDate = new Date();
+	  
+	  let deliverySignature = getColumnText(delivery, 'signature');
+	  
+	  let deliveryToday = (deliveryDateDate.toLocaleDateString() == todayDate.toLocaleDateString());
+	  let deliverySigned = (deliverySignature != "");
+	  
+	  if (deliveryToday || deliverySigned) {
+		let deliveryId = delivery.id;
+		let deliveryAmPm = delivery.name;
 		
-		var dateSummary = [];
+		html += "<option value=\"" + deliveryId + "\">" + fixDate(deliveryDate) + " " + deliveryAmPm + "</option>";
+	  }
+	}
+	
+	gbc('#delivery').html(html).on('change', function(e) {
+	  getDelivery();
+	});
+  });
+}
+
+function getDelivery() {
+  
+  gbc('#delivery-pallets').hide();
+  // gbc('#delivery-not-yet-signed').hide();
+  gbc('#delivery-signed').hide();
+  gbc('#delivery-details').hide();
+  
+  // initialiseSignature();
+  
+  let delivery = gbc('#delivery').val();
+  
+  let query = ' { boards(ids:4206918313) { items(ids:' + delivery + ') { id name column_values(ids:["date6","hour","signature","board_relation","people"]) { id text value } } } } ';
+  
+  mondayAPI(query, function(data) {
+	var html = '<ul class="uk-list uk-list-striped">';
+	
+	var delivery = data['data']['boards'][0]['items'][0];
+	
+	let deliveryId = delivery.id;
+	let deliveryAmPm = delivery.name;
+	let deliveryDate = getColumnText(delivery, 'date6');
+	let deliveryTime = getColumnText(delivery, 'hour');
+	let deliveryDriver = getColumnText(delivery, 'people');
+	let deliverySignature = decodeURIComponent(getColumnText(delivery, 'signature'));
+	var deliveryPallets2 = getColumnText(delivery, 'board_relation').split(', ');
+	let deliveryPallets = JSON.parse(getColumnValue(delivery, 'board_relation'));
+	
+	if (deliveryPallets != null) {
+		deliveryPallets = deliveryPallets['linkedPulseIds'];
 		
-		let pallets = data['data']['boards'][0]['items'];
-		
-		// loop through radiators and add them to a summary array, grouped by pallet number
-		for (var i = 0; i < pallets.length; i++) {
-			let pallet = pallets[i];
-			
-			let palletName = pallet.name;
-			let deliveredDate = getColumnText(pallet, columnId_RadiatorPallet_DispatchedDate);
-			
-			let palletSummaryPallet = findInArray(dateSummary, 'deliveredDate', deliveredDate);
-			let palletAlreadyInPalletSummary = (palletSummaryPallet == undefined);
-			
-			if ((palletName != "0") && (deliveredDate != "")) {
-				if (palletAlreadyInPalletSummary) {
-					dateSummary.push({ 'deliveredDate': deliveredDate, 'pallets': [pallet] })
-				} else {
-					palletSummaryPallet.pallets.push(pallet)
-				}
-			}
-		}
-		
-		// sort array by pallet number
-		dateSummary.sort((a, b) => (a.deliveredDate < b.deliveredDate) ? 1 : -1);
-		
-		var html = '<ul uk-accordion>';
-		
-		for (var i = 0; i < dateSummary.length; i++) {
-			let delivery = dateSummary[i];
-			
-			let deliveryDate = delivery.deliveredDate;
-			let palletsDelivered = delivery.pallets;
-			
-			var dateCount = 0;
-			
-			for (var j = 0; j < palletsDelivered.length; j++) {
-				let palletDelivered = palletsDelivered[j];
+		if (deliveryPallets != undefined) {
+			for (var i = 0; i < deliveryPallets.length; i++) {
+				let deliveryPallet = deliveryPallets[i];
 				
-				let palletRadiators = getColumnText(palletDelivered, columnId_RadiatorPallet_Radiators);
-				dateCount += ((palletRadiators == '') ? 0 : palletRadiators.split(',').length);
-			}
-			
-			html += '<li>';
-			html += '<a class="uk-accordion-title" href="#">';
-			html += '<h3>';
-			html += deliveryDate + ' [' + dateCount + ' rads]';
-			html += '</h3>';
-			html += '</a>';
-			html += '<div class="uk-accordion-content">';
-			html += '<ul class="uk-list uk-list-striped">';
-			
-			palletsDelivered.sort((a, b) => ((parseInt(a.name)) > (parseInt(b.name))) ? 1 : -1);
-			
-			for (var j = 0; j < palletsDelivered.length; j++) {
-				let palletDelivered = palletsDelivered[j];
+				let deliveryPalletId = deliveryPallet['linkedPulseId'];
+				let deliveryPalletName = deliveryPallets2[i];
 				
-				let palletId = palletDelivered.id;
-				let palletNumber = palletDelivered.name;
-				let palletRadiators = getColumnText(palletDelivered, columnId_RadiatorPallet_Radiators);
-				let palletDeliveredBy = getColumnText(palletDelivered, columnId_RadiatorPallet_DeliveredBy);
-				let palletRadiatorCount = ((palletRadiators == '') ? 0 : palletRadiators.split(',').length);
-				let palletRadiatorCountText = palletRadiatorCount + ' rad' + ((palletRadiatorCount == 1) ? '' : 's');
-				
-				html += '<li class="uk-flex uk-flex-middle">';
-				html += '<span>Pallet <a href="radiators-all-pallets.html#' + palletId + '">' + palletNumber + '</a> [' + fixName(palletDeliveredBy) + '] ' + palletRadiatorCountText + '</span>';
+				html += '<li>';
+				html += 'Pallet <a href="radiators-all-pallets.html#' + deliveryPalletId + '">' + deliveryPalletName + '</a>';
 				html += '</li>';
 			}
-			
-			html += '</ul>';
-			html += '</div>';
-			html += '</li>';
 		}
+	} else {
+		html += '<li>';
+		html += 'No pallets on this delivery.';
+		html += '</li>';
+	}
+	
+	if (deliverySignature != "") {
+		gbc('#delivery-status').text('Delivered');
+		gbc('#delivery-date-time').text(deliveryDate + ' ' + deliveryTime);
+		gbc('#delivery-driver').text(deliveryDriver);
 		
-		html += '</ul>';
+		document.getElementById('signature').setAttribute('src', deliverySignature);
 		
-		gbc('#page').html(html).show();
+		gbc('#delivery-signed').show();
+		gbc('#delivery-details').show();
+	} else {
+		gbc('#delivery-status').text('Not yet delivered');
+		gbc('#delivery-date-time').text('-');
+		gbc('#delivery-driver').text('-');
 		
-	});
+		gbc('#delivery-details').show();
+	}
+	
+	gbc('#delivery-pallets').html(html).show();
+  });
 }

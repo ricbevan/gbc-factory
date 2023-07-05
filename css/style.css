@@ -46,6 +46,10 @@ input[type="number"]::-webkit-outer-spin-button {
   color: #FFFFFF !important;
 }
 
+.gbc-radiator-row.uk-background-secondary {
+  color: #fff;
+}
+
 .gbc-red, .gbc-red:hover { background-color: #EB1E63 !important; }
 .gbc-orange, .gbc-orange:hover { background-color: #FF5723 !important; }
 .gbc-yellow, .gbc-yellow:hover { background-color: #FFC10F !important; }
@@ -53,3 +57,20 @@ input[type="number"]::-webkit-outer-spin-button {
 .gbc-blue, .gbc-blue:hover { background-color: #00A9F4 !important; }
 .gbc-indigo, .gbc-indigo:hover { background-color: #3D51B5 !important; }
 .gbc-violet, .gbc-violet:hover { background-color: #9D27B0 !important; }
+
+#delivery-signature {
+  border: 2px dotted #CCCCCC;
+  border-radius: 15px;
+  cursor: crosshair;
+}
+
+.gbc-radiator-code-to-copy {
+  color: #ffffff !important;
+  background-color: #ffffff !important;
+  border: 0px !important;
+}
+
+.gbc-radiator-code-to-copy::selection {
+    background-color: #ffffff !important;
+    color: #ffffff !important;
+}

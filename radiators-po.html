@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Radiators Deliveries</title>
+		<title>Radiators Purchase Order</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="css/uikit.min.css" />
@@ -22,7 +22,7 @@
 		<div class="uk-section gbc-orange">
 			<div class="uk-container">
 				<div class="uk-position-top-right uk-padding-small" uk-tooltip="title: Not logged in; pos: bottom" id="username"><span uk-icon="user" class="uk-icon-button"></span></div>
-				<h1 class="uk-text-large">Radiators Deliveries</h1>
+				<h1 class="uk-text-large">Purchase Order</h1>
 			</div>
 		</div>
 		<div class="uk-section uk-section-default">
@@ -30,27 +30,17 @@
 				<ul class="uk-breadcrumb">
 					<li><a href="index.html">Home</a></li>
 					<li><a href="radiators.html">Radiators</a></li>
-					<li><span>Deliveries</span></li>
+					<li><span>Purchase Order</span></li>
 				</ul>
-				<div class="uk-alert-warning" uk-alert>
-					<p>Do not use when driving or in charge of vehicle.</p>
-				</div>
-				<div class="uk-child-width-1-1 uk-grid-small" uk-grid>
-					<div>
-						<select class="uk-select" id="radiator-delivery-date"></select>
-					</div>
-					<!-- <div>
-						<select class="uk-select" id="radiator-delivery-driver"></select>
-					</div> -->
-				</div>
-				<div class="uk-child-width-1-1" id="page2" uk-grid>
-					
-				</div>
-				<div class="uk-child-width-1-1" id="page" uk-grid>
-					
-				</div>
 				<div class="uk-alert-danger" id="error" uk-alert hidden>
 					<p></p>
+				</div>
+				
+				<div class="uk-child-width-1-1 uk-grid-small" id="page" uk-grid>
+					<div>
+						<select class="uk-select" id="delivery"></select>
+						<div class="uk-margin-top" id="delivery-radiators" hidden></div>
+					</div>
 				</div>
 			</div>
 			
@@ -68,7 +58,7 @@
 		<script src="js/gbc.js"></script>
 		<script src="js/gbc-office.js"></script>
 		<script src="js/monday.js"></script>
-		<script src="js/pages/radiators-deliveries.js"></script>
+		<script src="js/pages/radiators-po.js"></script>
 		<!-- <script defer data-domain="factory.gbc.uk" src="https://stats.gbc.uk/js/index.js"></script> -->
 		<script defer data-domain="factory.gbc.uk" data-api="https://old-frog-340d.falling-shadow-dfed.workers.dev/gbc/event" src="https://old-frog-340d.falling-shadow-dfed.workers.dev/gbc/script.js"></script>
 	</body>
