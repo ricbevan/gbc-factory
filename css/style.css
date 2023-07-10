@@ -58,9 +58,11 @@ input[type="number"]::-webkit-outer-spin-button {
 .gbc-indigo, .gbc-indigo:hover { background-color: #3D51B5 !important; }
 .gbc-violet, .gbc-violet:hover { background-color: #9D27B0 !important; }
 
-#delivery-signature {
-  border: 2px dotted #CCCCCC;
+#canvas, #signature {
   border-radius: 15px;
+}
+
+#canvas {
   cursor: crosshair;
 }
 

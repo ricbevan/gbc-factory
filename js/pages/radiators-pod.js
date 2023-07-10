@@ -241,7 +241,8 @@ function initialiseSignature() {
     
     canvasContext.fillStyle = "#000";
     
-    var t = e.originalEvent.touches[0];
+    // var t = e.originalEvent.touches[0];
+    var t = e.touches[0];
     var x = t.pageX - e.target.offsetLeft;
     var y = t.pageY - e.target.offsetTop;
     
@@ -254,7 +255,8 @@ function initialiseSignature() {
   canvas.ontouchmove = function(e) {
     canvasContext.fillStyle = "#000";
     
-    var t = e.originalEvent.touches[0];
+    // var t = e.originalEvent.touches[0];
+    var t = e.touches[0];
     var x = t.pageX - e.target.offsetLeft;
     var y = t.pageY - e.target.offsetTop;
     
