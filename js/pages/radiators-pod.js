@@ -41,6 +41,8 @@ function getDeliveries() {
     gbc('#delivery').html(html).on('change', function(e) {
       getDelivery();
     });
+    
+    getHashPod();
   });
 }
 
@@ -153,6 +155,15 @@ function saveDelivery() {
     UIkit.notification('Delivery saved', 'success');
     getDelivery();
   });
+}
+
+function getHashPod() {
+  if(window.location.hash) {
+    let hash = window.location.hash.substring(1);
+    
+    gbc('#delivery').val(hash);
+    getDelivery();
+  }
 }
 
 var isSign = false;

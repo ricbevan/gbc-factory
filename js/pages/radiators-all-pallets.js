@@ -90,7 +90,7 @@ function getPallet() {
 	
 	let palletId = gbc('#pallet-number').val();
 	
-	let query = ' { boards(ids: ' + boardId_RadiatorPallet + ') { items(ids: ' + palletId + ') { column_values(ids: ["' + columnId_RadiatorPallet_DispatchedDate + '", "' + columnId_RadiatorPallet_Status + '", "' + columnId_RadiatorPallet_DeliveredBy + '", "' + columnId_RadiatorPallet_Radiators + '"]) { id text value } } } } ';
+	let query = ' { boards(ids: ' + boardId_RadiatorPallet + ') { items(ids: ' + palletId + ') { column_values(ids: ["' + columnId_RadiatorPallet_Status + '", "' + columnId_RadiatorPallet_Radiators + '", "connect_boards"]) { id text value } } } } ';
 	
 	mondayAPI(query, function(data) {
 		
@@ -98,17 +98,23 @@ function getPallet() {
 		
 		let pallet = data['data']['boards'][0]['items'][0];
 		
-		let palletDate = getColumnText(pallet, columnId_RadiatorPallet_DispatchedDate);
+		// let palletDate = getColumnText(pallet, columnId_RadiatorPallet_DispatchedDate);
 		let palletStatus = getColumnText(pallet, columnId_RadiatorPallet_Status);
-		let palletDeliveredBy = getColumnText(pallet, columnId_RadiatorPallet_DeliveredBy);
+		// let palletDeliveredBy = getColumnText(pallet, columnId_RadiatorPallet_DeliveredBy);
 		let palletRadiatorIds = getColumnValue(pallet, columnId_RadiatorPallet_Radiators);
+		let palletDelivery = JSON.parse(getColumnValue(pallet, 'connect_boards'));
 		
 		html += '<p>';
 		
 		if (palletStatus == 'At GBC') {
 			html += 'Currently at GBC.';
 		} else {
-			html += 'Delivered by ' + fixName(palletDeliveredBy) + ' on ' + fixDate(palletDate);
+			if ('linkedPulseIds' in palletDelivery) {
+				palletDelivery = palletDelivery['linkedPulseIds'][0]['linkedPulseId'];
+				console.log(palletDelivery);
+				
+				html += '<a href="radiators-pod.html#' + palletDelivery + '">Delivered</a>.';
+			}
 		}
 		
 		html += '</p>';
