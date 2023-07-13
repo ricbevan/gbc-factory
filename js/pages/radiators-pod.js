@@ -132,9 +132,18 @@ function saveDelivery() {
     return false;
   }
   
+  const currentDate = new Date();
+  
+  const currentHour = currentDate.getHours();
+  const currentMinute = currentDate.getMinutes();
+  
   var query = 'mutation {';
   
-  var updates = JSON.stringify(' { "signature" : "' + encodeURIComponent(signature) + '" } ');
+  var personUpdate = '"people": {"personsAndTeams": [{"id": ' + userId + ', "kind": "person"}] }, ';
+  var hourUpdate = '"hour" : {"hour" : ' + currentHour + ', "minute" : ' + currentMinute + '}, ';
+  var signatureUpdate = '"signature" : "' + encodeURIComponent(signature) + '"';
+  
+  var updates = JSON.stringify(' { ' + personUpdate + hourUpdate + signatureUpdate + ' } ');
   
   query += 'change_multiple_column_values(item_id: ' + delivery + ', board_id: 4206918313, column_values: ' + updates + ') { id }';
   
