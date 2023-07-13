@@ -3,40 +3,7 @@ getStarted();
 document.addEventListener("DOMContentLoaded", function() {
 	getDates();
 	getPallets();
-	// getDrivers();
 });
-
-// function getDrivers() {
-// 	let query = '{ boards(ids: 4013024988) { items { column_values(ids:["person"]) { id value text }} }}';
-// 	
-// 	mondayAPI(query, function(data) {
-// 		let drivers = data['data']['boards'][0]['items'];
-// 		var html = '';
-// 		var selectedValue = '';
-// 		
-// 		for (var i = 0; i < drivers.length; i++) {
-// 			
-// 			let driver = drivers[i];
-// 			
-// 			let driverName = getColumnText(driver, 'person');
-// 			let driverData = getColumnValue(driver, 'person');
-// 			
-// 			let driverId = JSON.parse(driverData)['personsAndTeams'][0]['id'];
-// 			
-// 			html += "<option value=\"" + driverId + "\">" + fixName(driverName) + "</option>";
-// 			
-// 			if (driverId == userId) {
-// 				selectedValue = driverId;
-// 			}
-// 		}
-// 		
-// 		gbc('#radiator-delivery-driver').html(html);
-// 		
-// 		if (selectedValue != '') {
-// 			gbc('#radiator-delivery-driver').val(selectedValue);
-// 		}
-// 	});
-// }
 
 function getDates() {
 	var html = '<option value=\"\" disabled hidden selected>date</option>';
@@ -85,7 +52,6 @@ function getDelivery() {
 		let deliveryAmPm = delivery.name;
 		let deliveryDate = getColumnText(delivery, 'date6');
 		let deliveryTime = getColumnText(delivery, 'hour');
-		// let deliveryDriver = getColumnText(delivery, 'people');
 		let deliverySignature = decodeURIComponent(getColumnText(delivery, 'signature'));
 		var deliveryPallets2 = getColumnText(delivery, 'board_relation').split(', ');
 		let deliveryPallets = JSON.parse(getColumnValue(delivery, 'board_relation'));
@@ -94,7 +60,7 @@ function getDelivery() {
 			deliveryPallets = deliveryPallets['linkedPulseIds'];
 			
 			if (deliveryPallets != undefined) {
-				if (deliveryPallets.count > 0) {
+				if (deliveryPallets.length > 0) {
 					var html = '<ul class="uk-list uk-list-striped">';
 					
 					for (var i = 0; i < deliveryPallets.length; i++) {
@@ -117,10 +83,9 @@ function getDelivery() {
 		
 		gbc('#page input').disable();
 		
-		if (deliverySignature == '') {
+		if (deliverySignature == '') { // disable check boxes if delivery is signed for
 			gbc('#page input').enable();
 		}
-	
 	
 	});
 }
