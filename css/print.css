@@ -1,5 +1,16 @@
 @media print {
-	.gbc-print-hiden {
-		display: none;
+	.gbc-print-hidden {
+		display: none !important;
+		overflow: hidden !important;
+		visibility: hidden !important;
+	}
+	
+	.uk-section {
+		padding-top: 0px;
+		padding-bottom: 0px;
+	}
+	
+	.uk-card {
+		padding: 0px;
 	}
 }

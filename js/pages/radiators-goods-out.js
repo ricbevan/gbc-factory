@@ -50,7 +50,7 @@ function getRadiators() {
 		
 		var html = '<div><div class="uk-card uk-card-secondary uk-card-body" id="selected-radiators"><h3 class="uk-card-title">Radiators on ' + goodsOutPalletText + '</h3><ul class="uk-list"></ul></div></div>';
 		
-		html += '<div uk-filter="target: .radiator-filter; animation: false;" class="gbc-print-hiden">';
+		html += '<div uk-filter="target: .radiator-filter; animation: false;" class="gbc-print-hidden">';
 		html += '<ul class="uk-subnav uk-subnav-divider uk-background-default uk-margin" uk-sticky>';
 		html += '<li class="uk-active" uk-filter-control><a href="#">All</a></li>';
 		
@@ -139,7 +139,7 @@ function getRadiators() {
 			
 			html += '<li class="uk-flex uk-flex-middle" data-colour="' + alphanumeric(radiatorColour) + '" data-po="' + alphanumeric(radiatorPurchaseOrder) + '">';
 			html += '<label class="uk-flex-1">';
-			html += '<input class="uk-checkbox" type="checkbox" id="' + radiatorId + '" data-name="' + linkedPalletText + ' [' + radiatorColour + '] ' + radiatorName + '" data-changed="false"' + checkboxStatus + '> ';
+			html += '<input class="uk-checkbox" type="checkbox" id="' + radiatorId + '" data-name="[' + radiatorColour + '] ' + radiatorName +  ' (' + radiatorPurchaseOrder + ')" data-changed="false"' + checkboxStatus + '> ';
 			html += '[' + radiatorColour + '] ' + radiatorName + checkboxAlreadyOnPallet + ' <span class="uk-text-nowrap uk-text-muted">' + radiatorPurchaseOrder + '</span>';
 			html += '</label>'
 			html += '<span uk-icon="icon: info;" class="uk-flex-none uk-margin-small-left" uk-tooltip="title: ' + radiatorId + '; pos: left"></span>'
@@ -177,7 +177,11 @@ function getSelectedRadiators() {
 		html += '<li>' + radiator.dataset.name + '</li>';
 	});
 	
-	if (html == '') {
+	var radiatorCount = gbc('#page ul input[type=checkbox]:checked').count();
+	
+	if (radiatorCount > 0) {
+		html += '<li class="uk-text-lead">Quantity: ' + radiatorCount + '</li>';
+	} else {
 		html = 'No radiators currently on pallet';
 	}
 	

@@ -32,6 +32,10 @@
 			return this;
 		};
 		
+		Constructor.prototype.count = function () {
+			return this.elems.length;
+		};
+		
 		Constructor.prototype.css = function (type, style) {
 			this.each(function (item) {
 				item.style[type] = style;
