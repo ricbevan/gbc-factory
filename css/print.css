@@ -1,0 +1,5 @@
+@media print {
+	.gbc-print-hiden {
+		display: none;
+	}
+}

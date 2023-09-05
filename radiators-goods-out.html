@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="css/uikit.min.css" />
 		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/print.css" />
 		<script src="js/uikit.min.js"></script>
 		<script src="js/uikit-icons.min.js"></script>
 		
@@ -19,7 +20,7 @@
 		<link rel="manifest" href="media/images/icons/manifest.json">
 	</head>
 	<body uk-height-viewport>
-		<div class="uk-section gbc-orange">
+		<div class="uk-section gbc-orange gbc-print-hiden">
 			<div class="uk-container">
 				<div class="uk-position-top-right uk-padding-small" uk-tooltip="title: Not logged in; pos: bottom" id="username"><span uk-icon="user" class="uk-icon-button"></span></div>
 				<h1 class="uk-text-large">Radiators Goods Out</h1>
@@ -27,12 +28,12 @@
 		</div>
 		<div class="uk-section uk-section-default">
 			<div class="uk-container">
-				<ul class="uk-breadcrumb">
+				<ul class="uk-breadcrumb gbc-print-hiden">
 					<li><a href="index.html">Home</a></li>
 					<li><a href="radiators.html">Radiators</a></li>
 					<li><span>Goods Out</span></li>
 				</ul>
-				<div class="uk-child-width-1-1 uk-link-reset" uk-grid>
+				<div class="uk-child-width-1-1 uk-link-reset gbc-print-hiden" uk-grid>
 					<div>
 						<select class="uk-select" id="goods-out-pallet"></select>
 					</div>

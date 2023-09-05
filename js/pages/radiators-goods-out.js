@@ -36,6 +36,9 @@ function getRadiators() {
 	
 	let goodsOutPallet = gbc('#goods-out-pallet').val();
 	
+	var goodsOutPalletElement = document.getElementById("goods-out-pallet");
+	var goodsOutPalletText = goodsOutPalletElement.options[goodsOutPalletElement.selectedIndex].text;
+	
 	let query = 'query { items_by_column_values (board_id: ' + boardId_Radiator + ', column_id: "' + columnId_Radiator_Status + '", column_value: "Received") { id name group { title } column_values(ids:["' + columnId_Radiator_PalletOutgoing + '","' + columnId_Radiator_Colour + '", "' + columnId_Radiator_DispatchDate + '"]) { id text value } } }';
 	
 	mondayAPI(query, function(data) {
@@ -45,9 +48,9 @@ function getRadiators() {
 		var colours = [];
 		var purchaseOrders = [];
 		
-		var html = '<div><div class="uk-card uk-card-secondary uk-card-body" id="selected-radiators"><h3 class="uk-card-title">Selected radiators</h3><ul class="uk-list"></ul></div></div>';
+		var html = '<div><div class="uk-card uk-card-secondary uk-card-body" id="selected-radiators"><h3 class="uk-card-title">Radiators on ' + goodsOutPalletText + '</h3><ul class="uk-list"></ul></div></div>';
 		
-		html += '<div uk-filter="target: .radiator-filter; animation: false;">';
+		html += '<div uk-filter="target: .radiator-filter; animation: false;" class="gbc-print-hiden">';
 		html += '<ul class="uk-subnav uk-subnav-divider uk-background-default uk-margin" uk-sticky>';
 		html += '<li class="uk-active" uk-filter-control><a href="#">All</a></li>';
 		
