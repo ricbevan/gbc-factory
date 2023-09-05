@@ -3,6 +3,12 @@
 		margin: 0px;
 	}
 	
+	.gbc-print-shown {
+		display: block !important;
+		overflow: visible !important;
+		visibility: visible !important;
+	}
+	
 	.gbc-print-hidden {
 		display: none !important;
 		overflow: hidden !important;

@@ -48,7 +48,7 @@ function getRadiators() {
 		var colours = [];
 		var purchaseOrders = [];
 		
-		var checkSheet = '<ul class="uk-list uk-list-collapse">';
+		var checkSheet = '<ul class="uk-list uk-list-collapse uk-hidden gbc-print-shown">';
 		checkSheet += '<li>Date of inspection: .............. / ............... / ...............</li>';
 		checkSheet += '<li class="uk-margin-small-top">Inspected by: ........................................</li>';
 		checkSheet += '<li class="uk-margin-small-top">Hook marks:<span class="uk-align-right"><span class="uk-margin-medium-right">PASS</span>FAIL</span></li>';
