@@ -1,4 +1,8 @@
 @media print {
+	body: {
+		margin: 0px;
+	}
+	
 	.gbc-print-hidden {
 		display: none !important;
 		overflow: hidden !important;

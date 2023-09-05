@@ -48,7 +48,17 @@ function getRadiators() {
 		var colours = [];
 		var purchaseOrders = [];
 		
-		var html = '<div><div class="uk-card uk-card-secondary uk-card-body" id="selected-radiators"><div class="uk-flex"><div class="uk-flex-1"><h3 class="uk-card-title">Radiators on ' + goodsOutPalletText + '</h3></div><div class="uk-flex-none gbc-print-hidden"><a href="javascript: window.print();" class="uk-icon-link" uk-icon="icon: print; ratio: 1.5"></a></div></div><ul class="uk-list"></ul></div></div>';
+		var checkSheet = '<ul class="uk-list uk-list-collapse">';
+		checkSheet += '<li>Date of inspection: .............. / ............... / ...............</li>';
+		checkSheet += '<li class="uk-margin-small-top">Inspected by: ........................................</li>';
+		checkSheet += '<li class="uk-margin-small-top">Hook marks:<span class="uk-align-right"><span class="uk-margin-medium-right">PASS</span>FAIL</span></li>';
+		checkSheet += '<li class="uk-text-italic">Excessive build-up of paint:<span class="uk-align-right"><span class="uk-margin-medium-right">PASS</span>FAIL</span></li>';
+		checkSheet += '<li>Surface finish:<span class="uk-align-right"><span class="uk-margin-medium-right">PASS</span>FAIL</span></li>';
+		checkSheet += '<li class="uk-text-italic">Bracket inspection:<span class="uk-align-right"><span class="uk-margin-medium-right">PASS</span>FAIL</span></li>';
+		checkSheet += '<li>Touch-up required:<span class="uk-align-right"><span class="uk-margin-medium-right">YES</span>NO</span></li>';
+		checkSheet += '</ul>';
+		
+		var html = '<div><div class="uk-card uk-card-secondary uk-card-body" id="selected-radiators"><div class="uk-flex"><div class="uk-flex-1"><h3 class="uk-card-title uk-margin-remove-bottom">Radiators on ' + goodsOutPalletText + '</h3></div><div class="uk-flex-none gbc-print-hidden"><a href="javascript: window.print();" class="uk-icon-link" uk-icon="icon: print; ratio: 1.5"></a></div></div>' + checkSheet + '<ul class="uk-list gbc-goods-out-list"></ul></div></div>';
 		
 		html += '<div uk-filter="target: .radiator-filter; animation: false;" class="gbc-print-hidden">';
 		html += '<ul class="uk-subnav uk-subnav-divider uk-background-default uk-margin" uk-sticky>';
@@ -185,7 +195,7 @@ function getSelectedRadiators() {
 		html = 'No radiators currently on pallet';
 	}
 	
-	gbc('#selected-radiators ul').html(html);
+	gbc('#selected-radiators .gbc-goods-out-list').html(html);
 }
 
 function saveRadiator(radiatorCheckbox) {
