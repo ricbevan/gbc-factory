@@ -48,7 +48,7 @@ function getRadiators() {
 		var colours = [];
 		var purchaseOrders = [];
 		
-		var html = '<div><div class="uk-card uk-card-secondary uk-card-body" id="selected-radiators"><h3 class="uk-card-title">Radiators on ' + goodsOutPalletText + '</h3><ul class="uk-list"></ul></div></div>';
+		var html = '<div><div class="uk-card uk-card-secondary uk-card-body" id="selected-radiators"><div class="uk-flex"><div class="uk-flex-1"><h3 class="uk-card-title">Radiators on ' + goodsOutPalletText + '</h3></div><div class="uk-flex-none gbc-print-hidden"><a class="uk-button uk-button-default" href="javascript: window.print();">Print</a></div></div><ul class="uk-list"></ul></div></div>';
 		
 		html += '<div uk-filter="target: .radiator-filter; animation: false;" class="gbc-print-hidden">';
 		html += '<ul class="uk-subnav uk-subnav-divider uk-background-default uk-margin" uk-sticky>';
