@@ -52,8 +52,9 @@ function getRadiators() {
 		checkSheet += '<li>Date of inspection: .............. / ............... / ...............</li>';
 		checkSheet += '<li class="uk-margin-small-top">Inspected by: ........................................</li>';
 		checkSheet += '<li class="uk-margin-small-top">Hook marks:<span class="uk-align-right"><span class="uk-margin-medium-right">PASS</span>FAIL</span></li>';
+		checkSheet += '<li class="uk-text-italic">Paint in threads:<span class="uk-align-right"><span class="uk-margin-medium-right">PASS</span>FAIL</span></li>';
 		checkSheet += '<li class="uk-text-italic">Excessive build-up of paint:<span class="uk-align-right"><span class="uk-margin-medium-right">PASS</span>FAIL</span></li>';
-		checkSheet += '<li>Surface finish:<span class="uk-align-right"><span class="uk-margin-medium-right">PASS</span>FAIL</span></li>';
+		checkSheet += '<li>Surface finish/fully painted:<span class="uk-align-right"><span class="uk-margin-medium-right">PASS</span>FAIL</span></li>';
 		checkSheet += '<li class="uk-text-italic">Bracket inspection:<span class="uk-align-right"><span class="uk-margin-medium-right">PASS</span>FAIL</span></li>';
 		checkSheet += '<li>Touch-up required:<span class="uk-align-right"><span class="uk-margin-medium-right">YES</span>NO</span></li>';
 		checkSheet += '</ul>';
