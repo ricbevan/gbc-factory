@@ -63,7 +63,7 @@ function getRadiators() {
 		
 		html += '<div uk-filter="target: .radiator-filter; animation: false;" class="gbc-print-hidden">';
 		html += '<ul class="uk-subnav uk-subnav-divider uk-background-default uk-margin" uk-sticky id="radiator-filter">';
-		html += '<li class="uk-active" uk-filter-control><a href="#">All</a></li>';
+		// html += '<li class="uk-active" uk-filter-control><a href="#">All</a></li>';
 		
 		for (var i = 0; i < radiators.length; i++) {
 			let radiator = radiators[i];
@@ -86,6 +86,7 @@ function getRadiators() {
 			html += '<li><select class="uk-select">';
 			
 			hiddenFilter += '<li uk-filter-control="group: data-po" id="all-po"></li>';
+			html += '<option value="all-po" disabled selected>PO</option>';
 			html += '<option value="all-po">All</option>';
 			
 			for (var i = 0; i < purchaseOrders.length; i++) {
@@ -102,6 +103,7 @@ function getRadiators() {
 			html += '<li><select class="uk-select">';
 			
 			hiddenFilter += '<li uk-filter-control="group: data-colour" id="all-colour"></li>';
+			html += '<option value="all-colour" disabled selected>Colour</option>';
 			html += '<option value="all-colour">All</option>';
 			
 			for (var i = 0; i < colours.length; i++) {
