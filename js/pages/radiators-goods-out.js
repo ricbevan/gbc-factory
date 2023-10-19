@@ -62,7 +62,7 @@ function getRadiators() {
 		var html = '<div><div class="uk-card uk-card-secondary uk-card-body" id="selected-radiators"><div class="uk-flex"><div class="uk-flex-1"><h3 class="uk-card-title uk-margin-remove-bottom">Radiators on ' + goodsOutPalletText + '</h3></div><div class="uk-flex-none gbc-print-hidden"><a href="javascript: window.print();" class="uk-icon-link" uk-icon="icon: print; ratio: 1.5"></a></div></div>' + checkSheet + '<ul class="uk-list gbc-goods-out-list"></ul></div></div>';
 		
 		html += '<div uk-filter="target: .radiator-filter; animation: false;" class="gbc-print-hidden">';
-		html += '<ul class="uk-subnav uk-subnav-divider uk-background-default uk-margin" uk-sticky>';
+		html += '<ul class="uk-subnav uk-subnav-divider uk-background-default uk-margin" uk-sticky id="radiator-filter">';
 		html += '<li class="uk-active" uk-filter-control><a href="#">All</a></li>';
 		
 		for (var i = 0; i < radiators.length; i++) {
@@ -78,29 +78,44 @@ function getRadiators() {
 		colours = [... new Set(colours)].sort(); // get unique colours, sorted
 		purchaseOrders = [... new Set(purchaseOrders)].sort(); // get unique dates, sorted
 		
+		// ui kit only works with a list, as this doesn't render well with large amounts of items, hide it
+		// and render a drop down list (this is handled below)
+		var hiddenFilter = '<li hidden><ul>';
+		
 		if (purchaseOrders.length > 0) {
-			html += '<li><a href="#">PO<span uk-icon="icon: triangle-down"></span></a><div uk-dropdown="mode: click" class="gbc-filter"><ul class="uk-nav uk-dropdown-nav">';
+			html += '<li><select class="uk-select">';
+			
+			hiddenFilter += '<li uk-filter-control="group: data-po" id="all-po"></li>';
+			html += '<option value="all-po">All</option>';
 			
 			for (var i = 0; i < purchaseOrders.length; i++) {
 				let purchaseOrder = purchaseOrders[i];
 				
-				html += '<li uk-filter-control="filter: [data-po=\'' + alphanumeric(purchaseOrder) + '\']; group: data-po"><a href="#">' + purchaseOrder + '</a></li>';
+				hiddenFilter += '<li uk-filter-control="filter: [data-po=\'' + alphanumeric(purchaseOrder) + '\']; group: data-po" id="' + alphanumeric(purchaseOrder) + '-po"></li>';
+				html += '<option value="' + alphanumeric(purchaseOrder) + '-po">' + purchaseOrder + '</option>';
 			}
 			
-			html += '</ul></div></li>';
+			html += '</select></li>';
 		}
 		
 		if (colours.length > 0) {
-			html += '<li><a href="#">Colour<span uk-icon="icon: triangle-down"></span></a><div uk-dropdown="mode: click" class="gbc-filter"><ul class="uk-nav uk-dropdown-nav">';
+			html += '<li><select class="uk-select">';
+			
+			hiddenFilter += '<li uk-filter-control="group: data-colour" id="all-colour"></li>';
+			html += '<option value="all-colour">All</option>';
 			
 			for (var i = 0; i < colours.length; i++) {
 				let colour = colours[i];
 				
-				html += '<li uk-filter-control="filter: [data-colour=\'' + alphanumeric(colour) + '\']; group: data-colour"><a href="#">' + colour + '</a></li>';
+				hiddenFilter += '<li uk-filter-control="filter: [data-colour=\'' + alphanumeric(colour) + '\']; group: data-colour" id="' + alphanumeric(colour) + '-colour"></li>';
+				html += '<option value="' + alphanumeric(colour) + '-colour">' + colour + '</option>';
 			}
 			
-			html += '</ul></div></li>';
+			html += '</select></li>';
 		}
+		
+		hiddenFilter += '</ul></li>';
+		html += hiddenFilter;
 		
 		html += '</ul>';
 		
@@ -162,10 +177,6 @@ function getRadiators() {
 		
 		gbc('#page').html(html).show();
 		
-		gbc('.gbc-filter ul li a').on('click', function(button) { // close the filter menu when clicked on
-			button.target.closest('.gbc-filter').classList.remove('uk-open');
-		});
-		
 		gbc('.get-pallet').on('click', function(e) {
 			let radiatorId = e.target.dataset.radiator;
 			gbc('#goods-out-pallet').val(radiatorId);
@@ -177,6 +188,11 @@ function getRadiators() {
 		});
 		
 		getSelectedRadiators();
+		
+		// whenever a filter drop down list is clicked, 'click' the related list item
+		gbc('#radiator-filter select').on('change', function(button) { // close the filter menu when clicked on
+			document.getElementById(button.target.value).click();
+		});
 	});
 }
 
