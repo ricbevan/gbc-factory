@@ -10,13 +10,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getRadiators() {
 	
-	let query = 'query { items_by_multiple_column_values (board_id: ' + boardId_Radiator + ', column_id: "' + columnId_Radiator_Status + '", column_values: ["Not Received", "Received"]) { id name group { title } column_values(ids:["' + columnId_Radiator_Colour + '"]) { id text } } }';
+	let query = ' { items_page_by_column_values (limit: 500, board_id: ' + boardId_Radiator + ', columns: [{column_id: "' + columnId_Radiator_Status + '", column_values: ["Not Received", "Received"]}]) { items { id name group { title } column_values(ids:["' + columnId_Radiator_Colour + '"]) { id text } } } } ';
 	
-	mondayAPI(query, function(data) {
+	mondayAPI2(query, function(data) {
 		
 		var poSummary = [];
 		
-		let radiators = data['data']['items_by_multiple_column_values'];
+		let radiators = data['data']['items_page_by_column_values']['items'];
 		
 		// loop through radiators and add them to a summary array, grouped by pallet number
 		for (var i = 0; i < radiators.length; i++) {
@@ -91,10 +91,10 @@ function getRadiators() {
 function getRadiatorDetails(radiator) {
 	let radiatorId = radiator.target.closest('.gbc-radiator-info').getAttribute('data-radiatorid');
 	
-	let query = ' { boards(ids:' + boardId_Radiator + ') { items(ids: ' + radiatorId + ') { name, updates(limit: 10) { body }, column_values(ids:["' + columnId_Radiator_Colour + '"]) { text id } } } } ';
+	let query = ' { boards(ids:' + boardId_Radiator + ') { items_page { items(ids: ' + radiatorId + ') { name, updates(limit: 10) { body }, column_values(ids:["' + columnId_Radiator_Colour + '"]) { text id } } } } } ';
 	
-	mondayAPI(query, function(data) {
-		let radiator = data['data']['boards'][0]['items'][0];
+	mondayAPI2(query, function(data) {
+		let radiator = data['data']['boards'][0]['items_page']['items'][0];
 		
 		let radiatorName = radiator['name'];
 		let radiatorColour = getColumnText(radiator, columnId_Radiator_Colour);
@@ -135,7 +135,7 @@ function saveNote() {
 		let query = 'mutation { create_update (item_id: ' + id +
 			', body: "<p>' + userName + ': ' + note + '</p>") { id } }';
 		
-		mondayAPI(query, function(data) {
+		mondayAPI2(query, function(data) {
 			gbc('#radiator-note').val(''); // clear note field
 			UIkit.modal('#radiator-modal').hide();
 			UIkit.notification('Note saved', 'success');

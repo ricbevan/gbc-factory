@@ -46,6 +46,10 @@ function loadLocalVariables() {
 }
 
 function alphanumeric(str) {
+	if (str == null) {
+		return '';
+	}
+	
 	return str.replace(/\W/g, '');
 }
 
@@ -57,6 +61,9 @@ function displayError(errorMessage) {
 }
 
 function findInArray(arr, prop, val) {
+	// if (arr == undefined) { return null; }
+	// if (!arr.hasOwnProperty(prop)) { return null; }
+	
 	if (val == undefined) {
 		return arr[prop];
 	} else {
@@ -65,6 +72,10 @@ function findInArray(arr, prop, val) {
 }
 
 function fixDate(date) {
+	if (date == undefined) {
+		return '';
+	}
+	
 	var dateTime = '';
 	var splitDateTime = date.split(' ');
 	
@@ -102,17 +113,49 @@ function fixNameWithBracket(name) {
 }
 
 function getColumnRow(arr, column) {
-	let temp = findInArray(arr['column_values'], 'id', column);
-	return temp;
+	return findInArray(arr['column_values'], 'id', column);
 }
 
 function getColumnText(arr, column) {
+	if (getColumnRow(arr, column) == null) {
+		return '';
+	}
+	
 	return getColumnRow(arr, column)['text'];
 }
 
+function getColumnText2(arr, column) {
+	if (getColumnRow(arr, column) == null) {
+		return '';
+	}
+	
+	return getColumnRow(arr, column)['display_value'];
+}
+
 function getColumnValue(arr, column) {
+	if (getColumnRow(arr, column) == null) {
+		return '';
+	}
+	
 	return getColumnRow(arr, column)['value'];
 }
+
+// function getColumnValue(arr, column) {
+// 	if (getColumnRow(arr, column) == null) {
+// 		return '';
+// 	}
+// 	
+// 	return getColumnRow(arr, column)['value'];
+// }
+
+function getColumnValue2(arr, column) {
+	if (getColumnRow(arr, column) == null) {
+		return [];
+	}
+	
+	return getColumnRow(arr, column)['linked_item_ids'];
+}
+
 
 function hideLoading() {
 	loadingCount -= 1;

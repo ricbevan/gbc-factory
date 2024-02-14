@@ -6,10 +6,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getDeliveries() {
 
-  let query = ' { boards(ids:4206918313) { items { id name column_values(ids:["date6","signature"]) { id text } } } } ';
+  let query = ' { boards(ids:4206918313) { items_page(limit: 500, query_params: { order_by: { column_id:"date6", direction:desc } }) { items { id name column_values(ids:["date6","signature"]) { id text } } } } } ';
   
-  mondayAPI(query, function(data) {
-	var deliveries = data['data']['boards'][0]['items'];
+  mondayAPI2(query, function(data) {
+	var deliveries = data['data']['boards'][0]['items_page']['items'];
 	
 	deliveries.sort((a, b) => (
 	(getColumnText(a, 'date6') + a.name) <
@@ -49,14 +49,14 @@ function getDelivery() {
 	
 	let delivery = gbc('#delivery').val();
 	
-	let query = ' { boards(ids:4206918313) { items(ids:' + delivery + ') { id name column_values(ids:["date6","board_relation"]) { id text value } } } } ';
+	let query = ' { boards(ids:4206918313) { items_page(limit: 500, query_params: { ids: [' + delivery + ']}) { items { id name column_values(ids:["date6","board_relation"]) { id text value } } } } } ';
 	
 	var html = '<ul class="uk-list"><li>There are no radiators on this delivery</li></ul>';
 	gbc('#delivery-radiators').show().html(html);
 	
-	mondayAPI(query, function(data) {
+	mondayAPI2(query, function(data) {
 		
-		var delivery = data['data']['boards'][0]['items'][0];
+		var delivery = data['data']['boards'][0]['items_page']['items'][0];
 		let deliveryPallets = JSON.parse(getColumnValue(delivery, 'board_relation'));
 		
 		if (deliveryPallets != null) {
@@ -73,16 +73,16 @@ function getDelivery() {
 					deliveryPalletIds.push(deliveryPalletId);
 				}
 				
-				let query2 = ' { boards(ids:' + boardId_RadiatorPallet + ') { items(ids:[' + deliveryPalletIds.join(',') + ']) { id name column_values(ids:["board_relation"]) { id text } } } } ';
+				let query2 = ' { boards(ids:' + boardId_RadiatorPallet + ') { items_page(limit: 500, query_params: { ids: [' + deliveryPalletIds.join(',') + ']}) { items { id name column_values(ids:["board_relation"]) { id text ... on BoardRelationValue { display_value } } } } } ';
 				
-				mondayAPI(query2, function(data2) {
+				mondayAPI2(query2, function(data2) {
 					var radiators = '';
 					
-					var pallets = data2['data']['boards'][0]['items'];
+					var pallets = data2['data']['boards'][0]['items_page']['items'];
 					
 					for (var i = 0; i < pallets.length; i++) {
 						let pallet = pallets[i];
-						var palletRadiators = getColumnText(pallet, 'board_relation');
+						var palletRadiators = getColumnText2(pallet, 'board_relation');
 						radiators += ', ' + palletRadiators;
 					}
 					

@@ -8,10 +8,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getDeliveries() {
 
-  let query = ' { boards(ids:4206918313) { items { id name column_values(ids:["date6","signature"]) { id text } } } } ';
+  let query = ' { boards(ids:4206918313) { items_page(limit: 500, query_params: { order_by: { column_id:"date6", direction:desc } }) { items { id name column_values(ids:["date6","signature"]) { id text } } } } } ';
   
-  mondayAPI(query, function(data) {
-	var deliveries = data['data']['boards'][0]['items'];
+  mondayAPI2(query, function(data) {
+		
+	var deliveries = data['data']['boards'][0]['items_page']['items'];
 	
 	deliveries.sort((a, b) => (
 	(getColumnText(a, 'date6') + a.name) <
@@ -56,12 +57,12 @@ function getDelivery() {
   
   let delivery = gbc('#delivery').val();
   
-  let query = ' { boards(ids:4206918313) { items(ids:' + delivery + ') { id name column_values(ids:["date6","hour","signature","board_relation","people"]) { id text value } } } } ';
+  let query = ' { boards(ids:4206918313) { items_page(limit: 500, query_params: { ids: [' + delivery + ']}) { items { id name column_values(ids:["date6","hour","signature","board_relation","people"]) { id text value ... on BoardRelationValue { display_value } } } } } } ';
   
-  mondayAPI(query, function(data) {
+  mondayAPI2(query, function(data) {
 	var html = '<ul class="uk-list uk-list-striped">';
 	
-	var delivery = data['data']['boards'][0]['items'][0];
+	var delivery = data['data']['boards'][0]['items_page']['items'][0];
 	
 	let deliveryId = delivery.id;
 	let deliveryAmPm = delivery.name;
@@ -69,8 +70,16 @@ function getDelivery() {
 	let deliveryTime = getColumnText(delivery, 'hour');
 	let deliveryDriver = getColumnText(delivery, 'people');
 	let deliverySignature = decodeURIComponent(getColumnText(delivery, 'signature'));
-	var deliveryPallets2 = getColumnText(delivery, 'board_relation').split(', ');
-	let deliveryPallets = JSON.parse(getColumnValue(delivery, 'board_relation'));
+	var deliveryPallets2 = '';
+	var deliveryPallets = '';
+	
+	if (getColumnText2(delivery, 'board_relation') != null) {
+		deliveryPallets2 = getColumnText2(delivery, 'board_relation').split(', ');
+	}
+	
+	if (getColumnValue(delivery, 'board_relation') != null) {
+		deliveryPallets = JSON.parse(getColumnValue(delivery, 'board_relation'));
+	}
 	
 	if (deliveryPallets != null) {
 		deliveryPallets = deliveryPallets['linkedPulseIds'];
