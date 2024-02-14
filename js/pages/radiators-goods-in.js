@@ -12,7 +12,7 @@ function getPurchaseOrders() {
 	
 	let query = ' { boards(ids:' + boardId_Radiator + ') { groups { id title } } } ';
 	
-	mondayAPI(query, function(data) {
+	mondayAPI2(query, function(data) {
 		
 		let purchaseOrders = data['data']['boards'][0]['groups'];
 		
@@ -41,13 +41,13 @@ function getPurchaseOrder() {
 	
 	let purchaseOrderId = gbc('#goods-in-date').val();
 	
-	let query = ' { boards(ids:' + boardId_Radiator + ') { groups(ids: "' + purchaseOrderId + '") { id items { id } } } } ';
+	let query = ' { boards(ids:' + boardId_Radiator + ') { groups(ids: "' + purchaseOrderId + '") { id items_page(limit: 500) { items { id } } } } } ';
 	
-	mondayAPI(query, function(data) {
+	mondayAPI2(query, function(data) {
 		
 		var purchaseOrderRadiatorIds = [];
 		
-		let radiatorIds = data['data']['boards'][0]['groups'][0]['items'];
+		let radiatorIds = data['data']['boards'][0]['groups'][0]['items_page']['items'];
 		
 		for (var i = 0; i < radiatorIds.length; i++) {
 			let radiatorId = radiatorIds[i];
@@ -64,13 +64,13 @@ function getPurchaseOrder() {
 
 function getRadiators(purchaseOrderRadiatorIds) {
 	
-	let query = ' { boards(ids:' + boardId_Radiator + ') { items(ids: [' + purchaseOrderRadiatorIds + ']) { id name column_values(ids:["' + columnId_Radiator_Colour + '","' + columnId_Radiator_PalletIncoming + '","'+ columnId_Radiator_Status + '"]) { text id } } } } ';
+	let query = ' { boards(ids:' + boardId_Radiator + ') { items_page(limit: 500, query_params: { ids: [' + purchaseOrderRadiatorIds + ']}) { items { id name column_values(ids:["' + columnId_Radiator_Colour + '","' + columnId_Radiator_PalletIncoming + '","'+ columnId_Radiator_Status + '"]) { text id } } } } } ';
 	
-	mondayAPI(query, function(data) {
+	mondayAPI2(query, function(data) {
 		
 		var palletSummary = [];
 		
-		let purchaseOrders = data['data']['boards'][0]['items'];
+		let purchaseOrders = data['data']['boards'][0]['items_page']['items'];
 		
 		// loop through radiators and add them to a summary array, grouped by pallet number
 		for (var i = 0; i < purchaseOrders.length; i++) {
@@ -174,10 +174,10 @@ function selectAllOnPallet(pallet) {
 function getRadiatorDetails(radiator) {
 	let radiatorId = radiator.target.closest('.gbc-radiator-info').getAttribute('data-radiatorid');
 	
-	let query = ' { boards(ids:' + boardId_Radiator + ') { items(ids: ' + radiatorId + ') { name, updates(limit: 10) { body }, column_values(ids:["' + columnId_Radiator_Colour + '"]) { text id } } } } ';
+	let query = ' { boards(ids:' + boardId_Radiator + ') { items_page(limit: 500, query_params: { ids: [' + radiatorId + ']}) { items { name updates(limit: 10) { body } column_values(ids:["' + columnId_Radiator_Colour + '"]) { text id } } } } } ';
 	
-	mondayAPI(query, function(data) {
-		let radiator = data['data']['boards'][0]['items'][0];
+	mondayAPI2(query, function(data) {
+		let radiator = data['data']['boards'][0]['items_page']['items'][0];
 		
 		let radiatorName = radiator['name'];
 		let radiatorColour = getColumnText(radiator, columnId_Radiator_Colour);
@@ -223,7 +223,7 @@ function saveRadiators() {
 	
 	query += ' }';
 	
-	mondayAPI(query, function(data) {
+	mondayAPI2(query, function(data) {
 		UIkit.notification('Radiators saved', 'success');
 	});
 	
@@ -239,7 +239,7 @@ function saveNote() {
 		let query = 'mutation { create_update (item_id: ' + id +
 			', body: "<p>' + userName + ': ' + note + '</p>") { id } }';
 		
-		mondayAPI(query, function(data) {
+		mondayAPI2(query, function(data) {
 			gbc('#radiator-note').val(''); // clear note field
 			UIkit.modal('#radiator-modal').hide();
 			UIkit.notification('Note saved', 'success');

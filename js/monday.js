@@ -63,3 +63,56 @@ function mondayAPI(query, func) {
 		displayError(error + ' (mondayAPI)');
 	});
 }
+
+function mondayAPI2(query, func) {
+	if (debuggingOn) {
+		console.log(query);
+	}
+	
+	showLoading();
+	
+	if (query == undefined) {
+		throw 'No query provided (mondayAPI)';
+	}
+	
+	if (func == undefined) {
+		throw 'No function provided (mondayAPI)';
+	}
+	
+	if (apiKey == undefined) {
+		throw 'No api key provided (mondayAPI)';
+	}
+	
+	fetch ("https://api.monday.com/v2", {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization' : apiKey,
+			'API-Version' : '2024-01'
+		},
+		body: JSON.stringify({
+			'query' : query
+		})
+	})
+	.then((resp) => resp.json())
+	.then(function(data) {
+		if (debuggingOn) {
+			console.log(data);
+		}
+		
+		if (data['errors'] !== undefined) {
+			console.log(data['errors']);
+			throw data['errors'] + ' (mondayAPI)';
+			return false;
+		}
+		
+		hideLoading();
+		
+		func(data)
+	})
+	.catch(function(error) {
+		console.log(error);
+		hideLoading();
+		displayError(error + ' (mondayAPI)');
+	});
+}
